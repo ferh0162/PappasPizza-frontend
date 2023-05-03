@@ -7,11 +7,17 @@ async function fetchPizza() {
     const data = await response.json();
 
     data.forEach((pizza) => {
+      const ingredients = pizza.ingredients.map((ingredient) => ({
+        id: ingredient.id,
+        name: ingredient.name,
+        price: ingredient.price,
+      }));
+
       pizzas.push({
         id: pizza.id,
         name: pizza.name,
         price: pizza.price,
-        ingredients: pizza.ingredients,
+        ingredients: ingredients,
       });
     });
 
@@ -19,7 +25,8 @@ async function fetchPizza() {
   } catch (error) {
     console.error("Error fetching data:", error);
   }
-}
+};
+
 
 async function fetchDrink() {
   try {
@@ -54,7 +61,8 @@ function displayItems(items, containerId, itemClass) {
     let additionalInfo = "";
 
     if (itemClass === "pizza-item") {
-      additionalInfo = `<p class="card-text additional-info"> ${item.ingredients.join(", ")}</p>`;
+      const ingredientNames = item.ingredients.map((ingredient) => ingredient.name).join(", ");
+      additionalInfo = `<p class="card-text additional-info">${ingredientNames}</p>`;
     } else if (itemClass === "drink-item") {
       additionalInfo = `<p class="card-text additional-info">Size: ${item.size} </p>`;
     }
@@ -71,6 +79,7 @@ function displayItems(items, containerId, itemClass) {
     container.appendChild(div);
   }
 }
+
 
 let cart = [];
 
