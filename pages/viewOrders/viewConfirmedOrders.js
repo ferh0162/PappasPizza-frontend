@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/order/viewAll"
+const API_URL = "http://localhost:8080/api/order/viewConfirmed"
 
 async function fetchOrders(){
     try{
@@ -14,18 +14,34 @@ async function fetchOrders(){
 }
 
 
+
 function createTable(orders){
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
 
     const headerRow = document.createElement("tr");
-    const headers = ["id","phoneNumber","pizzas"];
+    const headers = ["id","phoneNumber","pizzas","name",
+        "address","postalCode","pickUpTime","confirmed"];
+    const headerDisplayNames = {
+        id: "Order ID",
+        phoneNumber: "Phone Number",
+        pizzas: "Pizza Count",
+        name: "Customer Name",
+        address: "Delivery Address",
+        postalCode: "Postal Code",
+        pickUpTime: "Pickup Time",
+        confirmed: "Confirmed",
+    };
     headers.forEach(header => {
         const th = document.createElement("th")
-        th.textContent = header;
+        th.textContent = headerDisplayNames[header];
         headerRow.appendChild(th);
     });
+
+
+
+
     thead.appendChild(headerRow);
     table.appendChild(thead);
     orders.forEach(order => {
@@ -34,6 +50,13 @@ function createTable(orders){
             const td = document.createElement("td");
             if (header === "Pizzas") {
                 td.textContent = order[header].length;
+            } else if (header === "pickUpTime") {
+                // Format the pickUpTime
+                const pickUpTime = new Date(order[header]);
+                td.textContent = pickUpTime.toLocaleString();
+            } else if (header === "confirmed") {
+                // Format the confirmed cell
+                td.textContent = order[header] ? "Yes" : "No";
             } else {
                 td.textContent = order[header];
             }
@@ -53,4 +76,3 @@ async function renderOrders() {
 }
 
 renderOrders();
-
