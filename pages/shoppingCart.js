@@ -124,9 +124,10 @@ function updateQuantity(itemId, newQuantity) {
 }
 
 function updateCart() {
-    const cartItems = document.getElementById("cart-items");
-    cartItems.innerHTML = "";
-    let total = 0;
+  
+  const cartItems = document.getElementById("cart-items");
+  cartItems.innerHTML = "";
+  let total = 0;
   
     for (const item of cart) {
       const li = document.createElement("li");
@@ -146,6 +147,10 @@ function updateCart() {
       cartItems.appendChild(li);
       total += item.price * item.quantity;
     }
+      // Check if the delivery option is selected and add 50 kr
+  if (document.getElementById("delivery").checked) {
+    total += 50;
+  }
   
     document.getElementById("cart-total").innerText = total.toFixed(2);
   
@@ -173,3 +178,8 @@ clearCartButton.addEventListener("click", () => {
   cart = [];
   updateCart();
 });
+
+const deliveryOptions = document.getElementsByName("deliveryOptions");
+for (const option of deliveryOptions) {
+  option.addEventListener("change", updateCart);
+}
