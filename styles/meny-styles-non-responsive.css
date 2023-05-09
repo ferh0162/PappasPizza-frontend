@@ -1,0 +1,132 @@
+/* 
+ Horizontal style BEGIN
+*/
+
+
+.nav-items-left, .nav-items-right {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-items-left li, .nav-items-right li {
+  margin: 0 40px;
+}
+
+/* 
+ Horizontal style END
+*/
+
+/* 
+ Verical style BEGIN
+*/
+
+ul.menu-vertical {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+}
+
+ul.menu-vertical li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+ul.menu-vertical li a.active {
+  background-color: #04aa6d;
+  color: white;
+}
+
+ul.menu-vertical li a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+.vertical {
+  display: flex;
+}
+ul.menu-vertical {
+  height: 500px;
+}
+/* 
+ Vertical style BEGIN
+*/
+
+/* 
+ Simple style BEGIN
+*/
+ul.menu-simple {
+  list-style-type: none;
+  padding: 0;
+  margin: 5;
+}
+
+ul.menu-simple li {
+  /* 
+  display block (default) --> Vertical
+  display inline --> Horizontal
+  */
+  display: inline;
+  margin-right: 5px;
+}
+
+/* 
+ Simple style END
+*/
+.logo {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: calc(50% + 45px); /* Adjust this value to move the logo down */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 10px solid #041A70;
+  border-radius: 50%;
+  background-color: #04124a; /* Add a background color to the border area */
+  box-sizing: content-box;
+}
+
+.logo-container {
+  position: relative;
+  height: 75px; /* Adjust this value to increase the container height */
+  width: 150px;
+}
+
+
+.menu-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #041A70;
+  padding: 10px 0;
+}
+
+.nav-items-left li a, .nav-items-right li a {
+  display: block;
+  color: #FFD139;
+  text-align: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease, font-size 0.2s ease, text-decoration 0.2s ease;
+}
+
+.nav-items-left li a:hover:not(.active), .nav-items-right li a:hover:not(.active) {
+  background-color: rgba(255, 209, 57, 0.2);
+  color: #FFD139;
+  font-size: 19px; /* Increase font size on hover */
+  text-decoration: underline; /* Add underline on hover */
+}
+
+.nav-items-left a.active, .nav-items-right a.active {
+  background-color: rgba(255, 209, 57, 0.2);
+  color: #FFD139;
+  border: 1px solid #FFD139;
+}
