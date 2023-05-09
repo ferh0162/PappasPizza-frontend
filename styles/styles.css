@@ -29,10 +29,7 @@ body {
   .card-body, .card-footer {
     background-color: #f8f9fa;
   }
-  
-  .navbar {
-    background-color: #333;
-  }
+
   
   .nav-link {
     color: #fff;
