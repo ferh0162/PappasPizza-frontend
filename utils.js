@@ -3,6 +3,7 @@
  * @param {*} templ The HTML-Template to render
  * @param {string} contentId 
  */
+
  export function renderTemplate(templ, contentId) {
   const clone = templ.content.cloneNode(true)
   const content = document.getElementById(contentId)
@@ -97,4 +98,21 @@ export function sanitizeStringWithTableRows(tableRows) {
   return secureRows
 }
 
-
+  export function makeOptions(method, body, addToken) {
+    const opts = {
+      method: method,
+      headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json"
+      }
+    }
+    if (body) { //Observe how we can add new fields to an object when needed
+      opts.body = JSON.stringify(body);
+    }
+  
+    if(addToken && localStorage.getItem("token")){
+      opts.headers.Authorization = "Bearer " + localStorage.getItem("Token");
+    }
+  
+    return opts;
+  }
