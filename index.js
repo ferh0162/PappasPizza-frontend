@@ -11,6 +11,7 @@ window.addEventListener("load", async () => {
     const templateTest = await loadTemplate("./pages/menuPage/test.html")
     const templateMenu = await loadTemplate("./pages/menu.html")
     const templateRecept = await loadTemplate("./pages/recepter/recepter.html")
+    const templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
     
     adjustForMissingHash()
 
@@ -39,7 +40,8 @@ window.addEventListener("load", async () => {
         
         "/recepter": () => { renderTemplate(templateRecept, "content")
         initReceipts()
-        }
+        },
+        "/ingredients": ()=> renderTemplate(templateIngredient, "content")
     })
     .notFound(() => {
       renderTemplate(templateNotFound, "content")
