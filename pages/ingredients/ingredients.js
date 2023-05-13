@@ -18,15 +18,24 @@ async function editIngredient(id, ingredientRequest) {
         },
         body: JSON.stringify(ingredientRequest)
     });
-    return await handleHttpErrors(response);
+    const result = await handleHttpErrors(response);
+    if (result) {
+        await loadIngredients();
+    }
+    return result;
 }
 
 async function deleteIngredient(id) {
     const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
         method: 'DELETE'
     });
-    return await handleHttpErrors(response);
+    const result = await handleHttpErrors(response);
+    if (result) {
+        await loadIngredients();
+    }
+    return result;
 }
+
 
 async function addIngredient(ingredientRequest) {
     const response = await fetch(`http://localhost:8080/api/ingredients`, {
@@ -36,7 +45,11 @@ async function addIngredient(ingredientRequest) {
         },
         body: JSON.stringify(ingredientRequest)
     });
-    return await handleHttpErrors(response);
+    const result = await handleHttpErrors(response);
+    if (result) { // assuming handleHttpErrors returns a truthy value on success
+        await loadIngredients();
+    }
+    return result;
 }
 function populateEditForm(id) {
     const URL = `http://localhost:8080/api/ingredients/${id}`;
@@ -51,12 +64,16 @@ function populateEditForm(id) {
 }
 
 
+
+
 async function renderIngredients() {
     const URL = "http://localhost:8080/api/ingredients";
+
     try {
         const response = await fetch(URL);
         const ingredients = await response.json();
         const listDataContainer = document.querySelector("#list-data");
+        listDataContainer.innerHTML = '';
 
         let headerRow = document.createElement('tr');
         headerRow.className = 'tr';
@@ -90,7 +107,11 @@ async function renderIngredients() {
             let editButton = document.createElement('button');
             editButton.textContent = 'Rediger';
             editButton.className = 'edit-button';
-            editButton.addEventListener('click', () => populateEditForm(ingredient.id));
+            editButton.addEventListener('click', async () => {
+                await populateEditForm(ingredient.id);
+                console.log(ingredient.id)
+                await loadIngredients();
+            });
             let editCell = document.createElement('td');
             editCell.appendChild(editButton);
             row.appendChild(editCell);
@@ -119,6 +140,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 async function renderAddIngredients(){
     try {
         const tableDataContainer = document.querySelector("#table-data");
+        tableDataContainer.innerHTML = '';
         let headerRow = document.createElement('tr');
         headerRow.className = 'tr';
         ['Ingrediens','Pris','Tilføj'].forEach(headerText => {
@@ -164,6 +186,7 @@ async function renderAddIngredients(){
 
 function createEditForm() {
     const editContainer = document.querySelector("#edit-data");
+    editContainer.innerHTML = '';
 
     let headerRow = document.createElement('tr');
     headerRow.className = 'tr';
@@ -179,14 +202,16 @@ function createEditForm() {
     row.className = 'tr';
 
     let idInput = document.createElement('input');
+    idInput.id = 'editIngredientId';
     idInput.className = 'input-field';
-    idInput.disabled = true;
+
     let idCell = document.createElement('td');
     idCell.className = 'td';
     idCell.appendChild(idInput);
     row.appendChild(idCell);
 
     let ingredientInput = document.createElement('input');
+    ingredientInput.id = 'editIngredientName';
     ingredientInput.className = 'input-field';
     let ingredientCell = document.createElement('td');
     ingredientCell.className = 'td';
@@ -194,6 +219,7 @@ function createEditForm() {
     row.appendChild(ingredientCell);
 
     let priceInput = document.createElement('input');
+    priceInput.id = 'editIngredientPrice';
     priceInput.className = 'input-field';
     let priceCell = document.createElement('td');
     priceCell.className = 'td';
@@ -203,8 +229,13 @@ function createEditForm() {
     let editButton = document.createElement('button');
     editButton.textContent = 'Rediger';
     editButton.className = 'edit-button';
-    editButton.addEventListener('click', () =>
-        editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value}));
+    editButton.addEventListener('click', async () =>{
+        if (idInput.value) {
+            await editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value});
+            console.log(idInput.value)
+            await loadIngredients();
+        }
+    });
     let editCell = document.createElement('td');
     editCell.appendChild(editButton);
     row.appendChild(editCell);
