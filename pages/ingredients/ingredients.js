@@ -1,4 +1,3 @@
-import {handleHttpErrors} from "../../utils.js";
 
 export function initIngredients(){
     loadIngredients()
@@ -8,6 +7,29 @@ export function initIngredients(){
 async function loadIngredients(){
     await renderIngredients()
     await renderAddIngredients()
+}
+
+async function handleHttpErrors(response) {
+    if (!response.ok) {
+        let errorMessage = `${response.status} (${response.statusText})`;
+
+        let errorData = null;
+        if (response.headers.get('content-type').includes('application/json')) {
+            const responseData = await response.json();
+            errorMessage = `${errorMessage}: ${responseData.message}`;
+            errorData = responseData.errors;
+        }
+
+        const error = new Error(errorMessage);
+        error.data = errorData;
+        throw error;
+    }
+    console.log(response.headers)
+    if (response.headers.get('content-type').includes('application/json')) {
+        return await response.json();
+    }
+
+    return response;
 }
 
 async function editIngredient(id, ingredientRequest) {
@@ -29,13 +51,16 @@ async function deleteIngredient(id) {
     const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
         method: 'DELETE'
     });
-    const result = await handleHttpErrors(response);
-    if (result) {
+    if (response.status != 204) {
+        const result = await handleHttpErrors(response);
+        if (result) {
+            await loadIngredients();
+        }
+        return result;
+    } else {
         await loadIngredients();
     }
-    return result;
 }
-
 
 async function addIngredient(ingredientRequest) {
     const response = await fetch(`http://localhost:8080/api/ingredients`, {
@@ -62,9 +87,6 @@ function populateEditForm(id) {
         })
         .catch(error => console.log("There was a problem with the fetch operation: " + error.message));
 }
-
-
-
 
 async function renderIngredients() {
     const URL = "http://localhost:8080/api/ingredients";
@@ -109,7 +131,6 @@ async function renderIngredients() {
             editButton.className = 'edit-button';
             editButton.addEventListener('click', async () => {
                 await populateEditForm(ingredient.id);
-                console.log(ingredient.id)
                 await loadIngredients();
             });
             let editCell = document.createElement('td');
@@ -119,7 +140,11 @@ async function renderIngredients() {
             let deleteButton = document.createElement('button');
             deleteButton.textContent = 'Slet';
             deleteButton.className = 'delete-button'
-            deleteButton.addEventListener('click', () => deleteIngredient(ingredient.id));
+            deleteButton.addEventListener('click', async () => {
+                await deleteIngredient(ingredient.id);
+                console.log(ingredient.id)
+                await loadIngredients();
+            });
             let deleteCell = document.createElement('td');
             deleteCell.appendChild(deleteButton);
             row.appendChild(deleteCell);
@@ -129,6 +154,7 @@ async function renderIngredients() {
 
     } catch (error) {
         console.log("There was a problem with the fetch operation: " + error.message);
+
     }
 }
 
@@ -232,7 +258,6 @@ function createEditForm() {
     editButton.addEventListener('click', async () =>{
         if (idInput.value) {
             await editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value});
-            console.log(idInput.value)
             await loadIngredients();
         }
     });
