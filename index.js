@@ -5,6 +5,7 @@ import {  setActiveLink, adjustForMissingHash, renderTemplate, loadTemplate } fr
 
 import { testEverything } from "./pages/menuPage/test.js"
 import {initReceipts} from "./pages/recepter/recepter.js"
+import {initIngredients} from "./pages/ingredients/ingredients.js";
 
 window.addEventListener("load", async () => {
 
@@ -41,7 +42,8 @@ window.addEventListener("load", async () => {
         "/recepter": () => { renderTemplate(templateRecept, "content")
         initReceipts()
         },
-        "/ingredients": ()=> renderTemplate(templateIngredient, "content")
+        "/ingredients": ()=> {renderTemplate(templateIngredient, "content")
+        initIngredients()}
     })
     .notFound(() => {
       renderTemplate(templateNotFound, "content")

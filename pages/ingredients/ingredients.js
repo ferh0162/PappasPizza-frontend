@@ -1,0 +1,194 @@
+import {handleHttpErrors} from "../../utils.js";
+
+export function initIngredients(){
+    loadIngredients()
+    createEditForm()
+}
+
+async function loadIngredients(){
+    await renderIngredients()
+    await renderAddIngredients()
+}
+
+async function editIngredient(id, ingredientRequest) {
+    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ingredientRequest)
+    });
+    return await handleHttpErrors(response);
+}
+
+async function deleteIngredient(id) {
+    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+        method: 'DELETE'
+    });
+    return await handleHttpErrors(response);
+}
+
+async function addIngredient(ingredientRequest) {
+    const response = await fetch(`http://localhost:8080/api/ingredients`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ingredientRequest)
+    });
+    return await handleHttpErrors(response);
+}
+function populateEditForm(id) {
+    const URL = `http://localhost:8080/api/ingredients/${id}`;
+    fetch(URL)
+        .then(response => response.json())
+        .then(ingredient => {
+            document.getElementById('editIngredientId').value = ingredient.id;
+            document.getElementById('editIngredientName').value = ingredient.name;
+            document.getElementById('editIngredientPrice').value = ingredient.price;
+        })
+        .catch(error => console.log("There was a problem with the fetch operation: " + error.message));
+}
+
+
+async function renderIngredients() {
+    const URL = "http://localhost:8080/api/ingredients";
+    try {
+        const response = await fetch(URL);
+        const ingredients = await response.json();
+        const listDataContainer = document.querySelector("#list-data");
+
+        let headerRow = document.createElement('tr');
+        ['ID', 'Ingrediens', 'Pris', 'Rediger', 'Slet'].forEach(headerText => {
+            let header = document.createElement('th');
+            header.textContent = headerText;
+            headerRow.appendChild(header);
+        });
+        listDataContainer.appendChild(headerRow);
+
+        ingredients.forEach((ingredient) => {
+            let row = document.createElement('tr');
+            row.className = '';
+
+            let idCell = document.createElement('td');
+            idCell.textContent = ingredient.id;
+            row.appendChild(idCell);
+
+            let nameCell = document.createElement('td');
+            nameCell.textContent = ingredient.name;
+            row.appendChild(nameCell);
+
+            let priceCell = document.createElement('td');
+            priceCell.textContent = ingredient.price;
+            row.appendChild(priceCell);
+
+            let editButton = document.createElement('button');
+            editButton.textContent = 'Rediger';
+            editButton.className = 'edit-button';
+            editButton.addEventListener('click', () => populateEditForm(ingredient.id));
+            let editCell = document.createElement('td');
+            editCell.appendChild(editButton);
+            row.appendChild(editCell);
+
+            let deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Slet';
+            deleteButton.className = 'delete-button'
+            deleteButton.addEventListener('click', () => deleteIngredient(ingredient.id));
+            let deleteCell = document.createElement('td');
+            deleteCell.appendChild(deleteButton);
+            row.appendChild(deleteCell);
+
+            listDataContainer.appendChild(row);
+        });
+
+    } catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    renderIngredients();
+});
+
+async function renderAddIngredients(){
+    try {
+        const tableDataContainer = document.querySelector("#table-data");
+        let headerRow = document.createElement('tr');
+        ['Ingrediens','Pris','Tilføj'].forEach(headerText => {
+            let header = document.createElement('th');
+            header.textContent = headerText;
+            headerRow.appendChild(header)
+        });
+        tableDataContainer.appendChild(headerRow);
+
+        let row = document.createElement('tr');
+
+        let ingredientInput = document.createElement('input');
+        let ingredientCell = document.createElement('td');
+        ingredientCell.appendChild(ingredientInput);
+        row.appendChild(ingredientCell);
+
+        let priceInput = document.createElement('input');
+        let priceCell = document.createElement('td');
+        priceCell.appendChild(priceInput);
+        row.appendChild(priceCell);
+
+        let addButton = document.createElement('button');
+        addButton.textContent = 'Tilføj';
+        addButton.className = 'add-button';
+        addButton.addEventListener('click', () =>
+            addIngredient({name: ingredientInput.value, price: priceInput.value}));
+        let addCell = document.createElement('td');
+        addCell.appendChild(addButton);
+        row.appendChild(addCell);
+
+        tableDataContainer.appendChild(row);
+
+    } catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+    }
+}
+
+function createEditForm() {
+    const editContainer = document.querySelector("#edit-data");
+
+    let headerRow = document.createElement('tr');
+    ['ID', 'Ingrediens', 'Pris', 'Rediger'].forEach(headerText => {
+        let header = document.createElement('th');
+        header.textContent = headerText;
+        headerRow.appendChild(header);
+    });
+    editContainer.appendChild(headerRow);
+
+    let row = document.createElement('tr');
+
+    let idInput = document.createElement('input');
+    idInput.disabled = true;
+    let idCell = document.createElement('td');
+    idCell.appendChild(idInput);
+    row.appendChild(idCell);
+
+    let ingredientInput = document.createElement('input');
+    let ingredientCell = document.createElement('td');
+    ingredientCell.appendChild(ingredientInput);
+    row.appendChild(ingredientCell);
+
+    let priceInput = document.createElement('input');
+    let priceCell = document.createElement('td');
+    priceCell.appendChild(priceInput);
+    row.appendChild(priceCell);
+
+    let editButton = document.createElement('button');
+    editButton.textContent = 'Rediger';
+    editButton.className = 'edit-button';
+    editButton.addEventListener('click', () =>
+        editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value}));
+    let editCell = document.createElement('td');
+    editCell.appendChild(editButton);
+    row.appendChild(editCell);
+
+    editContainer.appendChild(row);
+}
+
+
