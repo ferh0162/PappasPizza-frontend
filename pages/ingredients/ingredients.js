@@ -59,8 +59,10 @@ async function renderIngredients() {
         const listDataContainer = document.querySelector("#list-data");
 
         let headerRow = document.createElement('tr');
+        headerRow.className = 'tr';
         ['ID', 'Ingrediens', 'Pris', 'Rediger', 'Slet'].forEach(headerText => {
             let header = document.createElement('th');
+            header.className = 'th';
             header.textContent = headerText;
             headerRow.appendChild(header);
         });
@@ -68,17 +70,20 @@ async function renderIngredients() {
 
         ingredients.forEach((ingredient) => {
             let row = document.createElement('tr');
-            row.className = '';
+            row.className = 'tr';
 
             let idCell = document.createElement('td');
+            idCell.className = 'td';
             idCell.textContent = ingredient.id;
             row.appendChild(idCell);
 
             let nameCell = document.createElement('td');
+            nameCell.className = 'td';
             nameCell.textContent = ingredient.name;
             row.appendChild(nameCell);
 
             let priceCell = document.createElement('td');
+            priceCell.className = 'td';
             priceCell.textContent = ingredient.price;
             row.appendChild(priceCell);
 
@@ -115,22 +120,29 @@ async function renderAddIngredients(){
     try {
         const tableDataContainer = document.querySelector("#table-data");
         let headerRow = document.createElement('tr');
+        headerRow.className = 'tr';
         ['Ingrediens','Pris','Tilføj'].forEach(headerText => {
             let header = document.createElement('th');
+            header.className = 'th';
             header.textContent = headerText;
             headerRow.appendChild(header)
         });
         tableDataContainer.appendChild(headerRow);
 
         let row = document.createElement('tr');
+        row.className = 'tr';
 
         let ingredientInput = document.createElement('input');
+        ingredientInput.className = 'input-field';
         let ingredientCell = document.createElement('td');
+        ingredientCell.className = 'td';
         ingredientCell.appendChild(ingredientInput);
         row.appendChild(ingredientCell);
 
         let priceInput = document.createElement('input');
+        priceInput.className = 'input-field';
         let priceCell = document.createElement('td');
+        priceCell.className = 'td';
         priceCell.appendChild(priceInput);
         row.appendChild(priceCell);
 
@@ -154,28 +166,37 @@ function createEditForm() {
     const editContainer = document.querySelector("#edit-data");
 
     let headerRow = document.createElement('tr');
+    headerRow.className = 'tr';
     ['ID', 'Ingrediens', 'Pris', 'Rediger'].forEach(headerText => {
         let header = document.createElement('th');
+        header.className = 'th';
         header.textContent = headerText;
         headerRow.appendChild(header);
     });
     editContainer.appendChild(headerRow);
 
     let row = document.createElement('tr');
+    row.className = 'tr';
 
     let idInput = document.createElement('input');
+    idInput.className = 'input-field';
     idInput.disabled = true;
     let idCell = document.createElement('td');
+    idCell.className = 'td';
     idCell.appendChild(idInput);
     row.appendChild(idCell);
 
     let ingredientInput = document.createElement('input');
+    ingredientInput.className = 'input-field';
     let ingredientCell = document.createElement('td');
+    ingredientCell.className = 'td';
     ingredientCell.appendChild(ingredientInput);
     row.appendChild(ingredientCell);
 
     let priceInput = document.createElement('input');
+    priceInput.className = 'input-field';
     let priceCell = document.createElement('td');
+    priceCell.className = 'td';
     priceCell.appendChild(priceInput);
     row.appendChild(priceCell);
 
