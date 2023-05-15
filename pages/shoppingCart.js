@@ -1,9 +1,40 @@
 const pizzas = [];
 const drinks = [];
+let cart = [];
+export async function init() {
+
+
+  await fetchPizza();
+  await fetchDrink();
+
+  displayItems(pizzas, "pizza-list", "pizza-item");
+  displayItems(drinks, "drinks-list", "drink-item");
+
+  // Check if there is cart data stored in localStorage
+  const storedCart = localStorage.getItem("cart");
+  if (storedCart) {
+    cart = JSON.parse(storedCart);
+    updateCart();
+  }
+
+  // Add event listeners and populate the menu items
+const clearCartButton = document.getElementById("clear-cart-button");
+clearCartButton.addEventListener("click", () => {
+  cart = [];
+  updateCart();
+});
+
+const deliveryOptions = document.getElementsByName("deliveryOptions");
+for (const option of deliveryOptions) {
+  option.addEventListener("change", updateCart);
+}
+
+
+}
 
 async function fetchPizza() {
   try {
-    const response = await fetch("http://localhost:8080/api/pizza/pizzas");
+    const response = await fetch("http://localhost:8080/api/pizzas");
     const data = await response.json();
 
     data.forEach((pizza) => {
@@ -30,7 +61,7 @@ async function fetchPizza() {
 
 async function fetchDrink() {
   try {
-    const response = await fetch("http://localhost:8080/api/pizza/drinks");
+    const response = await fetch("http://localhost:8080/api/drinks");
     const data = await response.json();
 
     data.forEach((drink) => {
@@ -48,9 +79,6 @@ async function fetchDrink() {
   }
 }
 
-
-
-init();
 
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
@@ -73,15 +101,19 @@ function displayItems(items, containerId, itemClass) {
           <h5 class="card-title">${item.id}. ${item.name}</h5>
           <p class="card-text">${item.price} kr.</p>
           `+additionalInfo+`
-          <button class="btn btn-custom" onclick="addToCart(${item.id}, ${itemClass === "drink-item"})">Add to cart</button>
         </div>
       </div>`;
+
+    const button = document.createElement("button");
+    button.className = "btn btn-custom";
+    button.innerText = "Add to cart";
+    button.addEventListener("click", () => addToCart(item.id, itemClass === "drink-item"));
+
+    div.querySelector('.card .card-body').appendChild(button);
     container.appendChild(div);
   }
 }
 
-
-let cart = [];
 
 function addToCart(itemId, isDrink = false) {
   const item = isDrink
@@ -123,63 +155,41 @@ function updateQuantity(itemId, newQuantity) {
   }
 }
 
-function updateCart() {
-  
-  const cartItems = document.getElementById("cart-items");
-  cartItems.innerHTML = "";
-  let total = 0;
-  
+  function updateCart() {
+    const cartItems = document.getElementById("cart-items");
+    cartItems.innerHTML = "";
+    let total = 0;
+    
     for (const item of cart) {
       const li = document.createElement("li");
       li.className = "cart-item";
   
-      const itemDetails = item.isDrink
-        ? `${item.size}`
-        : `${item.id}.`;
+      const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
   
       li.innerHTML = `
         <span class="item-id">${itemDetails}</span>
         <span class="item-name">${item.name}</span>
         <span class="item-price">${item.price} kr.</span>
         <span class="item-quantity">x${item.quantity}</span>
-        <button class="remove-btn" onclick="removeFromCart(${item.id}, ${item.isDrink})">X</button>
       `;
+  
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove-btn";
+      removeBtn.innerText = "X";
+      removeBtn.addEventListener("click", () => removeFromCart(item.id, item.isDrink));
+  
+      li.appendChild(removeBtn);
       cartItems.appendChild(li);
+  
       total += item.price * item.quantity;
     }
-      // Check if the delivery option is selected and add 50 kr
-  if (document.getElementById("delivery").checked) {
-    total += 50;
-  }
+  
+    if (document.getElementById("delivery").checked) {
+      total += 50;
+    }
   
     document.getElementById("cart-total").innerText = total.toFixed(2);
-  
-    // Store cart data in localStorage
     localStorage.setItem("cart", JSON.stringify(cart));
   }
-async function init() {
-  await fetchPizza();
-  await fetchDrink();
+  
 
-  displayItems(pizzas, "pizza-list", "pizza-item");
-  displayItems(drinks, "drinks-list", "drink-item");
-
-  // Check if there is cart data stored in localStorage
-  const storedCart = localStorage.getItem("cart");
-  if (storedCart) {
-    cart = JSON.parse(storedCart);
-    updateCart();
-  }
-}
-
-// Add event listeners and populate the menu items
-const clearCartButton = document.getElementById("clear-cart-button");
-clearCartButton.addEventListener("click", () => {
-  cart = [];
-  updateCart();
-});
-
-const deliveryOptions = document.getElementsByName("deliveryOptions");
-for (const option of deliveryOptions) {
-  option.addEventListener("change", updateCart);
-}
