@@ -1,0 +1,64 @@
+table {
+    border-collapse: separate;
+    width: 25%;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+th, td {
+    border: 1px solid darkslategray;
+    text-align: left;
+    padding: 8px;
+    background-color: aqua;
+    font-family: Papyrus, fantasy;
+    position: relative;
+    border-radius: 0.25em ;
+}
+
+th {
+    background-color: darkgoldenrod;
+    font-family: Papyrus, fantasy;
+}
+th:nth-child(1), td:nth-child(1) {
+    width: 30%;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 50%;
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 20%;
+}
+tr:first-child th:first-child, tr:first-child td:first-child {
+    border-top-left-radius: 0.5em;
+}
+
+tr:first-child th:last-child, tr:first-child td:last-child {
+    border-top-right-radius: 0.5em;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 0.5em;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 0.5em;
+}
+button {
+    background-color: green;
+    border: none;
+    color: black;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Papyrus, fantasy;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: goldenrod;
+}

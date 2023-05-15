@@ -6,6 +6,7 @@ import {  setActiveLink, adjustForMissingHash, renderTemplate, loadTemplate } fr
 import { testEverything } from "./pages/menuPage/test.js"
 import {initReceipts} from "./pages/recepter/recepter.js"
 import {initIngredients} from "./pages/ingredients/ingredients.js";
+import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
 
 window.addEventListener("load", async () => {
 
@@ -13,6 +14,7 @@ window.addEventListener("load", async () => {
     const templateMenu = await loadTemplate("./pages/menu.html")
     const templateRecept = await loadTemplate("./pages/recepter/recepter.html")
     const templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
+    const templatePizzaManagement = await loadTemplate("./pages/pizzaManagement/pizzaManagement.html")
     
     adjustForMissingHash()
 
@@ -43,7 +45,12 @@ window.addEventListener("load", async () => {
         initReceipts()
         },
         "/ingredients": ()=> {renderTemplate(templateIngredient, "content")
-        initIngredients()}
+        initIngredients()
+        },
+        "/pizzaBehandling" : () => {
+          renderTemplate(templatePizzaManagement, "content")
+          initPizzaManagement()
+        }
     })
     .notFound(() => {
       renderTemplate(templateNotFound, "content")
