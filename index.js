@@ -7,6 +7,8 @@ import { testEverything } from "./pages/menuPage/test.js"
 import {initReceipts} from "./pages/recepter/recepter.js"
 import {initIngredients} from "./pages/ingredients/ingredients.js";
 import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
+import {init} from "./pages/shoppingCart.js"
+
 
 window.addEventListener("load", async () => {
 
@@ -39,7 +41,9 @@ window.addEventListener("load", async () => {
         </p>
        `,
         "/test": () => renderTemplate(templateTest, "content"),
-        "/menu": () => renderTemplate(templateMenu, "content"),
+        "/menu": () => { renderTemplate(templateMenu, "content")
+        init()
+        },
         
         "/recepter": () => { renderTemplate(templateRecept, "content")
         initReceipts()
