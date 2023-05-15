@@ -4,7 +4,7 @@
 }
 
 .pizza-management-pizza-container {
-  max-height: 70vh; /* Adjust the maximum height as desired */
+  max-height: 70vh; 
   overflow: auto;
 }
 
@@ -17,7 +17,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 30vh; /* Adjust the maximum height as desired */
+    max-height: 30vh; 
     min-height: 30vh; 
     overflow-y: auto;
   }

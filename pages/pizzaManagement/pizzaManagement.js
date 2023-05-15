@@ -1,10 +1,10 @@
-import { handleHttpErrors, makeOptions, sanitizeStringWithTableRows } from "../../utils.js";
+import { handleHttpErrors, makeOptions} from "../../utils.js";
 import { LOCAL_API as URL } from "../../settings.js";
 
 export function initPizzaManagement() {
   document.getElementById("btn-add-pizza-modal").onclick = showPizzaModal;
   document.getElementById("btn-modal-submit-pizza").onclick = addPizza;
-  //fetch list of pizzas  
+
   getIngredients()
   getPizzas();
 
@@ -33,13 +33,12 @@ export function initPizzaManagement() {
 async function addPizza(event) {
   event.preventDefault();
 
-  // Get form input values
   const pizzaName = document.getElementById("pizzaName").value;
   const pizzaPrice = parseFloat(document.getElementById("pizzaPrice").value);
   const selectedIngredientsList = document.getElementById("selectedIngredients");
   const selectedIngredients = Array.from(selectedIngredientsList.children).map(ingredient => ingredient.textContent);
 
-  // Create new pizza object
+
   const newPizza = {
     name: pizzaName,
     price: pizzaPrice,
@@ -50,13 +49,12 @@ async function addPizza(event) {
 
   try {
     await fetch(URL + "/pizzas", options).then(handleHttpErrors);
-    window.router.navigate("/")
+    getPizzas();
+    window.router.forceNavigate("/pizzaBehandling")
+} catch (error) {
+    console.log(error)
+}
 
-
-  } catch (error) {
-      console.log(error)
-  }
-  
   
 }
 
@@ -68,7 +66,7 @@ function showPizzaModal() {
     const selectedIngredientsList = document.getElementById("selectedIngredients");
     const selectedIngredients = Array.from(selectedIngredientsList.children).map(ingredient => ingredient.textContent);
   
-    // Create new pizza object
+
     const newPizza = {
       name: pizzaName,
       price: pizzaPrice,
@@ -76,7 +74,7 @@ function showPizzaModal() {
     };
   
     
-    // Create the HTML content for the pizza details
+  
     const pizzaHTML = `
     <h6>Navn: ${newPizza.name}</h6>
     <p>Pris: ${newPizza.price}</p>
@@ -95,7 +93,7 @@ async function getIngredients() {
     try {
         const ingredientsJson = await fetch(URL + "/ingredients").then(handleHttpErrors);
         renderIngredients(ingredientsJson);
-      } catch (error) {
+    } catch (error) {
           console.log(error)
       }
 
@@ -119,7 +117,7 @@ function renderIngredients(ingredients) {
     const selectedIngredientsList = document.getElementById('selectedIngredients');
     const clonedItem = listItem.cloneNode(true);
   
-    // Remove ingredient from "ingredient" list
+
     listItem.remove();
   
     clonedItem.classList.add('selected-ingredient');
@@ -132,7 +130,7 @@ function renderIngredients(ingredients) {
     const ingredientList = document.getElementById('ingredientList');
     const clonedItem = listItem.cloneNode(true);
   
-    // Remove ingredient from "selected ingredients" list
+
     listItem.remove();
   
     clonedItem.addEventListener('click', () => moveIngredientToSelected(ingredient, clonedItem));
@@ -164,11 +162,11 @@ function renderPizzas(pizzas) {
     pizzaName.textContent = pizza.name;
 
     const pizzaPrice = document.createElement('p');
-    pizzaPrice.innerHTML = `<strong>Price:</strong> ${pizza.price} kr.`;
+    pizzaPrice.innerHTML = `<strong>Pris:</strong> ${pizza.price} kr.`;
 
     const pizzaIngredients = document.createElement('p');
     const ingredientsList = pizza.ingredients.map(ingredient => ingredient.name).join(', ');
-    pizzaIngredients.innerHTML = `<strong>Ingredients:</strong> ${ingredientsList}`;
+    pizzaIngredients.innerHTML = `<strong>Ingredienser:</strong> ${ingredientsList}`;
 
     listItem.appendChild(pizzaName);
     listItem.appendChild(pizzaPrice);
@@ -187,9 +185,9 @@ function filterPizzas() {
     pizzas.forEach(pizza => {
       const pizzaName = pizza.querySelector('h3').textContent.toLowerCase();
       if (pizzaName.includes(searchQuery)) {
-        pizza.style.display = 'block'; // Display matching pizzas
+        pizza.style.display = 'block'; 
       } else {
-        pizza.style.display = 'none'; // Hide non-matching pizzas
+        pizza.style.display = 'none'; 
       }
     });
   }
