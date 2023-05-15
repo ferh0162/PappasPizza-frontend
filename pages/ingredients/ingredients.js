@@ -1,13 +1,78 @@
 
 export function initIngredients(){
-    loadIngredients()
-    createEditForm()
+    const ingredientComponent = document.querySelector('ingredient-component');
+    if (ingredientComponent) {
+        ingredientComponent.loadIngredients();
+        ingredientComponent.createEditForm();
+    }
 }
 
-async function loadIngredients(){
-    await renderIngredients()
-    await renderAddIngredients()
+
+class IngredientComponent extends HTMLElement {
+    constructor() {
+        super();
+        this.renderIngredients = renderIngredients.bind(this);
+        this.renderAddIngredients = renderAddIngredients.bind(this);
+        this.createEditForm = createEditForm.bind(this);
+        this.loadIngredients = loadIngredients.bind(this);
+        this.addIngredient = addIngredient.bind(this);
+        this.populateEditForm = populateEditForm.bind(this);
+        this.deleteIngredient = deleteIngredient.bind(this);
+        this.editIngredient = editIngredient.bind(this);
+
+
+
+        // Create a shadow root
+        const shadow = this.attachShadow({mode: 'open'});
+
+        // Create a template element and add your HTML to it
+        const template = document.createElement('template');
+        template.innerHTML = `
+            <style>
+                @import '../../styles/ingredient.css';
+            </style>
+            <div class="container">
+                <h1>Ingrediens Liste</h1>
+                <div class="flex-container">
+                    <div class="left-side">
+                        <table>
+                            <tbody id="list-data">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="right-side">
+                        <div class="upper-side">
+                            <table>
+                                <tbody id="table-data">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="lower-side">
+                            <table>
+                                <tbody id="edit-data">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Append the template content to the shadow root
+        shadow.appendChild(template.content.cloneNode(true));
+    }
 }
+
+// Define the new element
+customElements.define('ingredient-component', IngredientComponent);
+
+
+
+async function loadIngredients(){
+    await this.renderIngredients();
+    await this.renderAddIngredients();
+}
+
 
 async function handleHttpErrors(response) {
     if (!response.ok) {
@@ -32,21 +97,6 @@ async function handleHttpErrors(response) {
     return response;
 }
 
-async function editIngredient(id, ingredientRequest) {
-    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ingredientRequest)
-    });
-    const result = await handleHttpErrors(response);
-    if (result) {
-        await loadIngredients();
-    }
-    return result;
-}
-
 async function deleteIngredient(id) {
     const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
         method: 'DELETE'
@@ -54,11 +104,11 @@ async function deleteIngredient(id) {
     if (response.status != 204) {
         const result = await handleHttpErrors(response);
         if (result) {
-            await loadIngredients();
+            await loadIngredients.call(this);
         }
         return result;
     } else {
-        await loadIngredients();
+        await loadIngredients.call(this);
     }
 }
 
@@ -72,21 +122,38 @@ async function addIngredient(ingredientRequest) {
     });
     const result = await handleHttpErrors(response);
     if (result) { // assuming handleHttpErrors returns a truthy value on success
-        await loadIngredients();
+        await loadIngredients.call(this);
     }
     return result;
 }
-function populateEditForm(id) {
+
+async function editIngredient(id, ingredientRequest) {
+    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ingredientRequest)
+    });
+    const result = await handleHttpErrors(response);
+    if (result) {
+        await loadIngredients.call(this);
+    }
+    return result;
+}
+
+async function populateEditForm(id) {
     const URL = `http://localhost:8080/api/ingredients/${id}`;
-    fetch(URL)
+    await fetch(URL)
         .then(response => response.json())
         .then(ingredient => {
-            document.getElementById('editIngredientId').value = ingredient.id;
-            document.getElementById('editIngredientName').value = ingredient.name;
-            document.getElementById('editIngredientPrice').value = ingredient.price;
+            this.shadowRoot.getElementById('editIngredientId').value = ingredient.id;
+            this.shadowRoot.getElementById('editIngredientName').value = ingredient.name;
+            this.shadowRoot.getElementById('editIngredientPrice').value = ingredient.price;
         })
         .catch(error => console.log("There was a problem with the fetch operation: " + error.message));
 }
+
 
 async function renderIngredients() {
     const URL = "http://localhost:8080/api/ingredients";
@@ -94,7 +161,7 @@ async function renderIngredients() {
     try {
         const response = await fetch(URL);
         const ingredients = await response.json();
-        const listDataContainer = document.querySelector("#list-data");
+        const listDataContainer = this.shadowRoot.querySelector("#list-data");
         listDataContainer.innerHTML = '';
 
         let headerRow = document.createElement('tr');
@@ -130,8 +197,8 @@ async function renderIngredients() {
             editButton.textContent = 'Rediger';
             editButton.className = 'edit-button';
             editButton.addEventListener('click', async () => {
-                await populateEditForm(ingredient.id);
-                await loadIngredients();
+                await this.populateEditForm(ingredient.id);
+                await this.loadIngredients();
             });
             let editCell = document.createElement('td');
             editCell.appendChild(editButton);
@@ -141,9 +208,8 @@ async function renderIngredients() {
             deleteButton.textContent = 'Slet';
             deleteButton.className = 'delete-button'
             deleteButton.addEventListener('click', async () => {
-                await deleteIngredient(ingredient.id);
-                console.log(ingredient.id)
-                await loadIngredients();
+                await this.deleteIngredient(ingredient.id);
+                await this.loadIngredients();
             });
             let deleteCell = document.createElement('td');
             deleteCell.appendChild(deleteButton);
@@ -159,13 +225,10 @@ async function renderIngredients() {
 }
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    renderIngredients();
-});
-
 async function renderAddIngredients(){
+
     try {
-        const tableDataContainer = document.querySelector("#table-data");
+        const tableDataContainer = this.shadowRoot.querySelector("#table-data");
         tableDataContainer.innerHTML = '';
         let headerRow = document.createElement('tr');
         headerRow.className = 'tr';
@@ -198,7 +261,7 @@ async function renderAddIngredients(){
         addButton.textContent = 'Tilføj';
         addButton.className = 'add-button';
         addButton.addEventListener('click', () =>
-            addIngredient({name: ingredientInput.value, price: priceInput.value}));
+            this.addIngredient({name: ingredientInput.value, price: priceInput.value}));
         let addCell = document.createElement('td');
         addCell.appendChild(addButton);
         row.appendChild(addCell);
@@ -209,12 +272,12 @@ async function renderAddIngredients(){
         console.log("There was a problem with the fetch operation: " + error.message);
     }
 }
-
 function createEditForm() {
-    const editContainer = document.querySelector("#edit-data");
-    editContainer.innerHTML = '';
 
+    const editContainer = this.shadowRoot.querySelector("#edit-data");
+    editContainer.innerHTML = '';
     let headerRow = document.createElement('tr');
+
     headerRow.className = 'tr';
     ['ID', 'Ingrediens', 'Pris', 'Rediger'].forEach(headerText => {
         let header = document.createElement('th');
@@ -223,49 +286,51 @@ function createEditForm() {
         headerRow.appendChild(header);
     });
     editContainer.appendChild(headerRow);
-
     let row = document.createElement('tr');
-    row.className = 'tr';
 
+    row.className = 'tr';
     let idInput = document.createElement('input');
+
     idInput.id = 'editIngredientId';
     idInput.className = 'input-field';
-
     let idCell = document.createElement('td');
+
     idCell.className = 'td';
     idCell.appendChild(idInput);
     row.appendChild(idCell);
-
     let ingredientInput = document.createElement('input');
+
     ingredientInput.id = 'editIngredientName';
     ingredientInput.className = 'input-field';
     let ingredientCell = document.createElement('td');
     ingredientCell.className = 'td';
     ingredientCell.appendChild(ingredientInput);
     row.appendChild(ingredientCell);
-
     let priceInput = document.createElement('input');
+
     priceInput.id = 'editIngredientPrice';
     priceInput.className = 'input-field';
     let priceCell = document.createElement('td');
     priceCell.className = 'td';
     priceCell.appendChild(priceInput);
     row.appendChild(priceCell);
-
     let editButton = document.createElement('button');
+
     editButton.textContent = 'Rediger';
     editButton.className = 'edit-button';
     editButton.addEventListener('click', async () =>{
         if (idInput.value) {
-            await editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value});
-            await loadIngredients();
+            await this.editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value});
+            await this.loadIngredients();
         }
     });
     let editCell = document.createElement('td');
     editCell.appendChild(editButton);
     row.appendChild(editCell);
-
     editContainer.appendChild(row);
-}
 
+}
+document.addEventListener('DOMContentLoaded', (event) => {
+    initIngredients();
+});
 
