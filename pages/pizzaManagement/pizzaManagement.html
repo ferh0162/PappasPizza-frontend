@@ -1,0 +1,66 @@
+<template>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <!-- Add Pizza Form -->
+                <div class="mt-4">
+                    <h2>Lav en Pizza</h2>
+                    <!-- Rest of the form content -->
+                    <div class="mb-3">
+                        <label for="pizzaName" class="form-label">Pizza navn:</label>
+                        <input type="text" class="form-control" id="pizzaName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pizzaPrice" class="form-label">Pris:</label>
+                        <input type="number" class="form-control" id="pizzaPrice" required>
+                    </div>
+                    <div class="d-flex">
+                        <div class="mr-4">
+                          <h2 id="selectIngredientsTitle">Vælg ingredienser</h2>
+                          <input type="text" id="ingredientFilter" placeholder="Filtrer ingredienser">
+                          <ul id="ingredientList" class="ingredient-list"></ul>
+                        </div>
+                        
+                        <div class="ml-4">
+                          <h2 id="selectedIngredientsTitle">Ingredienser på pizza'en</h2>
+                          <ul id="selectedIngredients" class="ingredient-list"></ul>
+                        </div>
+                      </div>
+                    <button id="btn-add-pizza-modal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pizzaModal">Sæt pizza på listen</button>
+                    <div class="modal" id="pizzaModal">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                      
+                            <div class="modal-header">
+                              <h4 class="modal-title">Pizza oprettelse</h4>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <div id="modal-body" class="modal-body"></div>
+                      
+                            <div class="modal-footer">
+                              <button type="button" id="btn-modal-submit-pizza" class="btn btn-danger" data-bs-dismiss="modal">Opret Pizza</button>
+                              <button type="button" id="btn-modal-exit" class="btn btn-secondary" data-bs-dismiss="modal">Luk</button>
+                            </div>
+                      
+                          </div>
+                        </div>
+                      </div>
+                      
+                </div>
+            </div>
+            <div class="col-md-5">
+                <!-- View Pizzas -->
+                <div class="mt-4">
+                    <h2>Nuværrende Pizzaer</h2>
+                    <input type="text" id="searchInput" placeholder="Søg efter navn">
+                    <div id="pizzaContainer" class="pizza-management-pizza-container">
+                        <ul id="pizzaManagement-pizzaList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</template>
