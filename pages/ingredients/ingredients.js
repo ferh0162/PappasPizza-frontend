@@ -98,6 +98,7 @@ async function handleHttpErrors(response) {
 }
 
 async function deleteIngredient(id) {
+    try{
     const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
         method: 'DELETE'
     });
@@ -110,40 +111,55 @@ async function deleteIngredient(id) {
     } else {
         await loadIngredients.call(this);
     }
+}catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+
+    }
 }
 
 async function addIngredient(ingredientRequest) {
-    const response = await fetch(`http://localhost:8080/api/ingredients`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ingredientRequest)
-    });
-    const result = await handleHttpErrors(response);
-    if (result) { // assuming handleHttpErrors returns a truthy value on success
-        await loadIngredients.call(this);
+    try {
+        const response = await fetch(`http://localhost:8080/api/ingredients`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredientRequest)
+        });
+        const result = await handleHttpErrors(response);
+        if (result) { // assuming handleHttpErrors returns a truthy value on success
+            await loadIngredients.call(this);
+        }
+        return result;
+    } catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+
     }
-    return result;
 }
 
 async function editIngredient(id, ingredientRequest) {
-    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ingredientRequest)
-    });
-    const result = await handleHttpErrors(response);
-    if (result) {
-        await loadIngredients.call(this);
+    try {
+        const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredientRequest)
+        });
+        const result = await handleHttpErrors(response);
+        if (result) {
+            await loadIngredients.call(this);
+        }
+        return result;
+    } catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+
     }
-    return result;
 }
 
 async function populateEditForm(id) {
     const URL = `http://localhost:8080/api/ingredients/${id}`;
+    try {
     await fetch(URL)
         .then(response => response.json())
         .then(ingredient => {
@@ -152,6 +168,10 @@ async function populateEditForm(id) {
             this.shadowRoot.getElementById('editIngredientPrice').value = ingredient.price;
         })
         .catch(error => console.log("There was a problem with the fetch operation: " + error.message));
+}catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
+
+    }
 }
 
 
