@@ -19,12 +19,13 @@
 
     
   <div id="topnav">
-    <nav class="menu-horizontal">
-      <ul  id="menu" class="nav-items-left">
+    <nav  id="menu" class="menu-horizontal">
+      <ul id="nav-items-right" class="nav-items-left">
         <li>
           <a href="/" data-navigo>Home</a>
         </li>
-        <li>
+        <!-- HUSK AT TESTE OM HVORDAN DU KAN TILFØJE HTML TIL UL, SIDEN AT UL ER SOM EN LISTE. -->
+        <li id="test-id" style="display:none">
           <a href="/test" data-navigo>test</a>
         </li>
       </ul>
@@ -40,14 +41,20 @@
         <li>
           <a href="/recepter" data-navigo>Recepter</a>
         </li>
-        <li>
+        
+        <li id="login-id">
           <a href="/login" data-navigo>Login</a>
         </li>
+        <li id="logout-id" style="display:none">
+          <a href="/logout" data-navigo>Logout</a>
+        </li>
+      
       </ul>
     </nav>
     <div id="content" style="margin:15px;"></div>
   </div>
-  
+
+  <p id="error">Error Message Here</p>
   
             <script src="index.js" type="module"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">

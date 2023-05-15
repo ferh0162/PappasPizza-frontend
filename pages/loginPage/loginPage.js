@@ -1,5 +1,8 @@
-import { API_URL, LOCAL_API_URL} from "../../settings.js"
+import {LOCAL_API_URL as API_URL} from "../../settings.js"
 import {handleHttpErrors} from "../../utils.js"
+import { roleHandler } from "../../index.js"
+
+console.log("loginpage js is loaded!!!!")
 
 const URL = API_URL + "/auth/login"
 //Make sure that the URL is the correct one.
@@ -9,10 +12,12 @@ export function initLogin() {
   document.getElementById("login-btn").onclick = login
 }
 
-export function logout(){
-  /*
-  document.getElementById("login-id").style.display="block"
-  document.getElementById("logout-id").style.display="none"
+export async function logout(){
+  
+  //document.getElementById("login-id").style.display="block"
+  //document.getElementById("logout-id").style.display="none"
+
+/*
   document.getElementById("adminCalendar-id").style.display="none"
   document.getElementById("userCalendar-id").style.display="none"
   document.getElementById("addUser").style.display="none"
@@ -20,8 +25,14 @@ export function logout(){
   document.getElementById("showUsers").style.display="none"
   */
  //Make sure that whenever a client is logged out, that all the pages available to the anonymous user is showing.
+  
   localStorage.clear()
 
+  window.router.navigate("")
+
+  await roleHandler();
+
+  
 
 }
 
@@ -36,6 +47,8 @@ async function login(evt) {
   //Added DOMPurify.sanitize to add security. With this we prevent cross-site scripting (XSS) attacks and other types of malicious code injection.
   const username = DOMPurify.sanitize(document.getElementById("username").value)
   const password = DOMPurify.sanitize(document.getElementById("password").value)
+
+  
 
 
   //const userDto = {username:username,password:password}
@@ -53,12 +66,12 @@ async function login(evt) {
     localStorage.setItem("token",response.token)
     localStorage.setItem("roles",response.roles)
 
-    document.getElementById("login-id").style.display="none"
-    document.getElementById("logout-id").style.display="block"
+    //document.getElementById("login-id").style.display="none"
+    //document.getElementById("logout-id").style.display="block"
     //Makes the correct button show, based on if the user is logged in or not.
     
     console.log(localStorage.getItem("roles"))
-
+/*
     if (localStorage.getItem("roles", response.roles)=="ADMIN") {
 
       //document.getElementById("showUsers").style.display="block"
@@ -69,6 +82,8 @@ async function login(evt) {
      //Add pages that are available to the user.
      
     }
+*/
+    await roleHandler();
 
     window.router.navigate("")
   } catch (err) {
