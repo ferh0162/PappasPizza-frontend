@@ -1,5 +1,5 @@
 import { handleHttpErrors, makeOptions} from "../../utils.js";
-import { LOCAL_API as URL } from "../../settings.js";
+import { REMOTE_API as URL } from "../../settings.js";
 
 export function initPizzaManagement() {
   document.getElementById("btn-add-pizza-modal").onclick = showPizzaModal;
