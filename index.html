@@ -20,13 +20,19 @@
     
   <div id="topnav">
     <nav  id="menu" class="menu-horizontal">
-      <ul id="nav-items-right" class="nav-items-left">
+      <ul id="nav-items-left" class="nav-items-left">
         <li>
           <a href="/" data-navigo>Home</a>
         </li>
-        <!-- HUSK AT TESTE OM HVORDAN DU KAN TILFØJE HTML TIL UL, SIDEN AT UL ER SOM EN LISTE. -->
-        <li id="test-id" style="display:none">
-          <a href="/test" data-navigo>test</a>
+        <li id="unconfirmed-orders-id" style="display:none">
+          <a href="/unconfirmed-orders" data-navigo>Ubekræftede ordre</a>
+        </li>
+        <li id="all-orders-id" style="display:none">
+          <a href="/all-orders" data-navigo>Alle ordre</a>
+        </li>
+        <!-- HUSK AT TESTE OM HVORDAN DU KAN TILFØJE HTML TIL UL, SIDEN AT UL ER SOM EN LISTE.-->
+        <li id="about-id" style="display:none">
+          <a href="/about" data-navigo>Om os</a>
         </li>
       </ul>
       <div class="logo-container">
@@ -35,13 +41,18 @@
         </a>
       </div>
       <ul class="nav-items-right">
-        <li>
+        <li id="menu-id">
           <a href="/menu" data-navigo>Menu</a>
         </li>
-        <li>
+        <li id="chatGpt-id" style="display: none;">
+          <a href="/chatGpt" data-navigo>AI-Pizza</a>
+        </li>
+        <li id="recepter-id" style="display: none;">
           <a href="/recepter" data-navigo>Recepter</a>
         </li>
-        
+        <li id="addPizza-id" style="display: none;">
+          <a href="/addPizza" data-navigo>Tilføj Pizza</a>
+        </li>  
         <li id="login-id">
           <a href="/login" data-navigo>Login</a>
         </li>

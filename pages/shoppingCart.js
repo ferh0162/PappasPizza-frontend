@@ -1,6 +1,8 @@
 const pizzas = [];
 const drinks = [];
 
+console.log("shoppingcart is loaded!")
+
 async function fetchPizza() {
   try {
     const response = await fetch("http://localhost:8080/api/pizza/pizzas");
@@ -47,10 +49,6 @@ async function fetchDrink() {
     console.error("Error fetching data:", error);
   }
 }
-
-
-
-init();
 
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
@@ -157,9 +155,21 @@ function updateCart() {
     // Store cart data in localStorage
     localStorage.setItem("cart", JSON.stringify(cart));
   }
-async function init() {
+  export async function initMenu() {
   await fetchPizza();
   await fetchDrink();
+
+  // Add event listeners and populate the menu items
+const clearCartButton = document.getElementById("clear-cart-button");
+clearCartButton.addEventListener("click", () => {
+  cart = [];
+  updateCart();
+});
+
+const deliveryOptions = document.getElementsByName("deliveryOptions");
+for (const option of deliveryOptions) {
+  option.addEventListener("change", updateCart);
+}
 
   displayItems(pizzas, "pizza-list", "pizza-item");
   displayItems(drinks, "drinks-list", "drink-item");
@@ -170,16 +180,4 @@ async function init() {
     cart = JSON.parse(storedCart);
     updateCart();
   }
-}
-
-// Add event listeners and populate the menu items
-const clearCartButton = document.getElementById("clear-cart-button");
-clearCartButton.addEventListener("click", () => {
-  cart = [];
-  updateCart();
-});
-
-const deliveryOptions = document.getElementsByName("deliveryOptions");
-for (const option of deliveryOptions) {
-  option.addEventListener("change", updateCart);
 }
