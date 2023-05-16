@@ -64,7 +64,4 @@ async function signUp(user) {
   } catch (err) {
       document.getElementById("error").innerHTML = err
   }
-
-
-
 }
