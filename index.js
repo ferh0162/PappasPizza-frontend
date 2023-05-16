@@ -5,6 +5,8 @@ import {  setActiveLink, adjustForMissingHash, renderTemplate, loadTemplate } fr
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js"
 import {initReceipts} from "./pages/recepter/recepter.js"
+import { initSignIn } from "./pages/signInPage/signInPage.js"
+
 import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js"
 import {innitUnconfirmedOrders} from "./pages/orderConfirmation/orderConfirmation.js"
 import { innitAllOrders } from "./pages/allOrders/allOrders.js"
@@ -14,13 +16,10 @@ import { innitSignIn } from "./pages/signInPage/signInPage.js"
 import { innitOrder as initOrder } from "./pages/order/order.js"
 import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js"
 import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js"
-
-let templates = {}
-
-
 import {initIngredients} from "./pages/ingredients/ingredients.js";
 import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
 
+let templates = {}
 
 window.addEventListener("load", async () => {
 
@@ -35,6 +34,8 @@ window.addEventListener("load", async () => {
   templates.templateOrder = await loadTemplate("./pages/order/order.html")
   templates.templateChatGpt = await loadTemplate("./pages/chatGPTPage/chatGPTPage.html")
   templates.templateAddPizzas = await loadTemplate("./pages/addPizzasPage/addPizzasPage.html")
+  templates.templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
+  templates.templatePizzaManagement = await loadTemplate("./pages/pizzaManagement/pizzaManagement.html")
 
 
   /*const templates = {
@@ -45,10 +46,10 @@ window.addEventListener("load", async () => {
   }*/
 
   console.log("The site is updated!")
-
-    const templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
-    const templatePizzaManagement = await loadTemplate("./pages/pizzaManagement/pizzaManagement.html")
     
+
+    console.log("templates loaded!")
+
     adjustForMissingHash()
 
     await routeHandler()
@@ -68,6 +69,8 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
     const router = new Navigo("/", { hash: true });
 
     window.router = router
+
+    console.log("router loaded!")
    
     router
     .hooks({
@@ -76,15 +79,15 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
         done()
       }
     })
-    .on({ 
+    .on({
         //For very simple "templates", you can just insert your HTML directly like below
-        "/": () => document.getElementById("content").innerHTML =
+        "/": () => {document.getElementById("content").innerHTML =
           `<h2>Home</h2>
         <p style='margin-top:2em'>
         This is the content of the Home Route <br/>
         Observe that this is so simple that all HTML is added in the on-handler for the route. 
         </p>
-       `,
+       `},
         "/login": () => {
           renderTemplate(templates.templateLogin, "content")
           console.log("login loaded!")
@@ -106,11 +109,8 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
       renderTemplate(templates.templateNotFound, "content")
     })
     .resolve()
-
-
-    
-
-  }
+};
+  
 
 
 export async function roleHandler(){
