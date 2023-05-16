@@ -18,6 +18,9 @@ import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js"
 let templates = {}
 
 
+import {initIngredients} from "./pages/ingredients/ingredients.js";
+import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
+
 
 window.addEventListener("load", async () => {
 
@@ -42,6 +45,9 @@ window.addEventListener("load", async () => {
   }*/
 
   console.log("The site is updated!")
+
+    const templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
+    const templatePizzaManagement = await loadTemplate("./pages/pizzaManagement/pizzaManagement.html")
     
     adjustForMissingHash()
 
@@ -83,6 +89,14 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
           renderTemplate(templates.templateLogin, "content")
           console.log("login loaded!")
           initLogin()
+        },
+        "/ingredients": ()=> {renderTemplate(templateIngredient, "content")
+        initIngredients()
+        },
+          
+        "/pizzaBehandling" : () => {
+          renderTemplate(templatePizzaManagement, "content")
+          initPizzaManagement()
         }
         //"/test": () => renderTemplate(templates.templateTest, "content")
     })
