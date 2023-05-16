@@ -1,7 +1,7 @@
 const pizzas = [];
 const drinks = [];
 let cart = [];
-export async function init() {
+export async function initMenu() {
 
 
   await fetchPizza();
@@ -31,6 +31,8 @@ for (const option of deliveryOptions) {
 
 
 }
+
+console.log("shoppingcart is loaded!")
 
 async function fetchPizza() {
   try {
@@ -78,7 +80,6 @@ async function fetchDrink() {
     console.error("Error fetching data:", error);
   }
 }
-
 
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
@@ -191,5 +192,3 @@ function updateQuantity(itemId, newQuantity) {
     document.getElementById("cart-total").innerText = total.toFixed(2);
     localStorage.setItem("cart", JSON.stringify(cart));
   }
-  
-
