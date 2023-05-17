@@ -24,7 +24,7 @@ import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
 
 window.addEventListener("load", async () => {
 
-  templates.templateMenu = await loadTemplate("./pages/menu.html")
+  templates.templateMenu = await loadTemplate("./pages/menu/menu.html")
   templates.templateAbout = await loadTemplate("./pages/aboutPage/aboutPage.html")
   templates.templateRecept = await loadTemplate("./pages/recepter/recepter.html")
   templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html")
@@ -352,6 +352,7 @@ export async function roleHandler(){
 
           //Removing orderReceiptChef (confirmed orders)
           window.router.off("/orderReceiptChef")
+
 
         }
       }
