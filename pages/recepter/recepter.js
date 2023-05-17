@@ -1,5 +1,5 @@
 import {handleHttpErrors, sanitizeStringWithTableRows} from "../../utils.js"
-
+import { REMOTE_API as URL } from "../../settings.js"
 
 export function initReceipts() {
 
@@ -11,7 +11,7 @@ export function initReceipts() {
 
 
 async function loadReceipts() {
-    const data = await fetch("http://localhost:8080/api/receipts", {})
+    const data = await fetch( URL + "/receipts", {})
     .then(handleHttpErrors)
     
     renderReceipts(data)

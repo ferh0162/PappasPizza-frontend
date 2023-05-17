@@ -1,3 +1,5 @@
+import { REMOTE_API as URL } from "../../settings.js";
+
 
 export function initIngredients(){
     const ingredientComponent = document.querySelector('ingredient-component');
@@ -99,7 +101,7 @@ async function handleHttpErrors(response) {
 
 async function deleteIngredient(id) {
     try{
-    const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+    const response = await fetch(URL + `/ingredients/${id}`, {
         method: 'DELETE'
     });
     if (response.status != 204) {
@@ -119,7 +121,7 @@ async function deleteIngredient(id) {
 
 async function addIngredient(ingredientRequest) {
     try {
-        const response = await fetch(`http://localhost:8080/api/ingredients`, {
+        const response = await fetch(URL + `/ingredients`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -139,7 +141,7 @@ async function addIngredient(ingredientRequest) {
 
 async function editIngredient(id, ingredientRequest) {
     try {
-        const response = await fetch(`http://localhost:8080/api/ingredients/${id}`, {
+        const response = await fetch(URL + `/ingredients/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -158,9 +160,8 @@ async function editIngredient(id, ingredientRequest) {
 }
 
 async function populateEditForm(id) {
-    const URL = `http://localhost:8080/api/ingredients/${id}`;
     try {
-    await fetch(URL)
+    await fetch(URL + `/ingredients/${id}`)
         .then(response => response.json())
         .then(ingredient => {
             this.shadowRoot.getElementById('editIngredientId').value = ingredient.id;
@@ -176,10 +177,9 @@ async function populateEditForm(id) {
 
 
 async function renderIngredients() {
-    const URL = "http://localhost:8080/api/ingredients";
 
     try {
-        const response = await fetch(URL);
+        const response = await fetch(URL + "/ingredients");
         const ingredients = await response.json();
         const listDataContainer = this.shadowRoot.querySelector("#list-data");
         listDataContainer.innerHTML = '';

@@ -1,188 +1,193 @@
-import "https://unpkg.com/navigo"  //Will create the global Navigo object used below
-import "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"
-import {  setActiveLink, adjustForMissingHash, renderTemplate, loadTemplate } from "./utils.js"
+import "https://unpkg.com/navigo"; //Will create the global Navigo object used below
+import "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js";
+import {
+  setActiveLink,
+  adjustForMissingHash,
+  renderTemplate,
+  loadTemplate,
+} from "./utils.js";
 
+import { testEverything } from "./pages/aboutPage/aboutPage.js";
+import { initReceipts } from "./pages/recepter/recepter.js";
 
-import { testEverything } from "./pages/aboutPage/aboutPage.js"
-import {initReceipts} from "./pages/recepter/recepter.js"
-import { initSignIn } from "./pages/signInPage/signInPage.js"
+import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js";
+import { innitUnconfirmedOrders } from "./pages/orderConfirmation/orderConfirmation.js";
+import { innitAllOrders } from "./pages/allOrders/allOrders.js";
+import { innitOrderReceiptChef } from "./pages/orderReceiptChef/orderReceiptChef.js";
+import { initMenu } from "./pages/shoppingCart.js";
+import { initSignIn } from "./pages/signInPage/signInPage.js";
+import { innitOrder as initOrder } from "./pages/order/order.js";
+import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js";
+import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js";
+import { initIngredients } from "./pages/ingredients/ingredients.js";
+import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js";
 
-import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js"
-import {innitUnconfirmedOrders} from "./pages/orderConfirmation/orderConfirmation.js"
-import { innitAllOrders } from "./pages/allOrders/allOrders.js"
-import {innitOrderReceiptChef} from "./pages/orderReceiptChef/orderReceiptChef.js"
-import {initMenu} from "./pages/shoppingCart.js"
-import { innitSignIn } from "./pages/signInPage/signInPage.js"
-import { innitOrder as initOrder } from "./pages/order/order.js"
-import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js"
-import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js"
-import {initIngredients} from "./pages/ingredients/ingredients.js";
-import {initPizzaManagement} from "./pages/pizzaManagement/pizzaManagement.js"
-
-let templates = {}
+let templates = {};
 
 window.addEventListener("load", async () => {
+  templates.templateMenu = await loadTemplate("./pages/menu.html");
+  templates.templateAbout = await loadTemplate(
+    "./pages/aboutPage/aboutPage.html"
+  );
+  templates.templateRecept = await loadTemplate(
+    "./pages/recepter/recepter.html"
+  );
+  templates.templateLogin = await loadTemplate(
+    "./pages/loginPage/loginPage.html"
+  );
+  templates.templateUnconfirmedOrders = await loadTemplate(
+    "./pages/orderConfirmation/orderConfirmation.html"
+  );
+  templates.templateAllOrders = await loadTemplate(
+    "./pages/allOrders/allOrders.html"
+  );
+  templates.templateOrderReceiptChef = await loadTemplate(
+    "./pages/orderReceiptChef/orderReceiptChef.html"
+  );
+  templates.templateSignIn = await loadTemplate(
+    "./pages/signInPage/signInPage.html"
+  );
+  templates.templateOrder = await loadTemplate("./pages/order/order.html");
+  templates.templateChatGpt = await loadTemplate(
+    "./pages/chatGPTPage/chatGPTPage.html"
+  );
+  templates.templateAddPizzas = await loadTemplate(
+    "./pages/addPizzasPage/addPizzasPage.html"
+  );
+  templates.templateIngredient = await loadTemplate(
+    "./pages/ingredients/ingredients.html"
+  );
+  templates.templatePizzaManagement = await loadTemplate(
+    "./pages/pizzaManagement/pizzaManagement.html"
+  );
 
-  templates.templateMenu = await loadTemplate("./pages/menu.html")
-  templates.templateAbout = await loadTemplate("./pages/aboutPage/aboutPage.html")
-  templates.templateRecept = await loadTemplate("./pages/recepter/recepter.html")
-  templates.templateLogin = await loadTemplate("./pages/loginPage/loginPage.html")
-  templates.templateUnconfirmedOrders = await loadTemplate("./pages/orderConfirmation/orderConfirmation.html")
-  templates.templateAllOrders = await loadTemplate("./pages/allOrders/allOrders.html")
-  templates.templateOrderReceiptChef = await loadTemplate("./pages/orderReceiptChef/orderReceiptChef.html")
-  templates.templateSignIn = await loadTemplate("./pages/signInPage/signInPage.html")
-  templates.templateOrder = await loadTemplate("./pages/order/order.html")
-  templates.templateChatGpt = await loadTemplate("./pages/chatGPTPage/chatGPTPage.html")
-  templates.templateAddPizzas = await loadTemplate("./pages/addPizzasPage/addPizzasPage.html")
-  templates.templateIngredient = await loadTemplate("./pages/ingredients/ingredients.html")
-  templates.templatePizzaManagement = await loadTemplate("./pages/pizzaManagement/pizzaManagement.html")
+  adjustForMissingHash();
 
-
-  /*const templates = {
-    "templateTest": await loadTemplate("./pages/menuPage/test.html"),
-    "templateMenu": await loadTemplate("./pages/menu.html"),
-    "templateRecept": await loadTemplate("./pages/recepter/recepter.html"),
-    "templateLogin": await loadTemplate("./pages/loginPage/loginPage.html")
-  }*/
-
-  console.log("The site is updated!")
-    
-
-    console.log("templates loaded!")
-
-    adjustForMissingHash()
-
-    await routeHandler()
-
-
+  await routeHandler();
 });
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-      + ' Column: ' + column + ' StackTrace: ' + errorObj);
-  }
+  alert(
+    "Error: " +
+      errorMsg +
+      " Script: " +
+      url +
+      " Line: " +
+      lineNumber +
+      " Column: " +
+      column +
+      " StackTrace: " +
+      errorObj
+  );
+};
 
-  async function routeHandler(){
+async function routeHandler() {
+  const router = new Navigo("/", { hash: true });
 
-    console.log("Routehandler has run!")
+  window.router = router;
 
-    const router = new Navigo("/", { hash: true });
-
-    window.router = router
-
-    console.log("router loaded!")
-   
-    router
+  router
     .hooks({
       before(done, match) {
-        setActiveLink("menu", match.url)
-        done()
-      }
+        setActiveLink("menu", match.url);
+        done();
+      },
     })
     .on({
-        //For very simple "templates", you can just insert your HTML directly like below
-        "/": () => {document.getElementById("content").innerHTML =
-          `<h2>Home</h2>
+      //For very simple "templates", you can just insert your HTML directly like below
+      "/": () => {
+        document.getElementById("content").innerHTML = `<h2>Home</h2>
         <p style='margin-top:2em'>
         This is the content of the Home Route <br/>
         Observe that this is so simple that all HTML is added in the on-handler for the route. 
         </p>
-       `},
-        "/login": () => {
-          renderTemplate(templates.templateLogin, "content")
-          console.log("login loaded!")
-          initLogin()
-        },
-        "/ingredients": ()=> {renderTemplate(templateIngredient, "content")
-        initIngredients()
-        },
-          
-        "/pizzaBehandling" : () => {
-          renderTemplate(templatePizzaManagement, "content")
-          initPizzaManagement()
-        }
-        //"/test": () => renderTemplate(templates.templateTest, "content")
-    })
-    await roleHandler()
-    router
+       `;
+      },
+      "/login": () => {
+        renderTemplate(templates.templateLogin, "content");
+        initLogin();
+      },
+      //"/test": () => renderTemplate(templates.templateTest, "content")
+    });
+  await roleHandler();
+  router
     .notFound(() => {
-      renderTemplate(templates.templateNotFound, "content")
+      renderTemplate(templates.templateNotFound, "content");
     })
-    .resolve()
-};
-  
+    .resolve();
+}
 
+export async function roleHandler() {
+  if (localStorage.getItem("roles")) {
+    //Everything anyone but the ANONYMOUS can access.
 
-export async function roleHandler(){
+    //Removes sign in, since user has already logged in.
+    document.getElementById("signIn-id").style.display = "none";
+    window.router.off("/signin");
 
+    //Removes login, since role was found.
+    document.getElementById("login-id").style.display = "none";
+    window.router.off("/login");
 
-    if(localStorage.getItem("roles")){
-
-      //Everything anyone but the ANONYMOUS can access.
-
-      console.log("roles found!")
-
-      //Removes sign in, since user has already logged in.
-      window.router.off("/signin")
-      
-      //Removes login, since role was found.
-      document.getElementById("login-id").style.display = "none"
-      console.log("deleting login!")
-      window.router.off("/login")
-
-      //Shows logout, since role was found.
-      document.getElementById("logout-id").style.display = "block"
-      window.router.on({
+    //Shows logout, since role was found.
+    document.getElementById("logout-id").style.display = "block";
+    window.router.on({
       "/logout": () => {
-        console.log(templates)
-        renderTemplate(templates.templateLogin, "content")
-        logout()
-      }})
+        renderTemplate(templates.templateLogin, "content");
+        logout();
+      },
+    });
 
-            //Implementér funktionalitet hvor login bliver fjernet hvis der er en rolle, siden at den er null hvis det er anonymous.
+    //Implementér funktionalitet hvor login bliver fjernet hvis der er en rolle, siden at den er null hvis det er anonymous.
 
-            //Der skal også være de gældende "routes", hvor ADMIN som eksempel ikke kan se ting, som en almindelig user kan og vice versa.
+    //Der skal også være de gældende "routes", hvor ADMIN som eksempel ikke kan se ting, som en almindelig user kan og vice versa.
 
-            if(localStorage.getItem("roles") == "USER"){
+    if (localStorage.getItem("roles") == "USER") {
+      //Everything where USER can access.
 
-              //Everything where USER can access.
+      //Removes Sign-in
+      window.router.off("/signIn");
 
-              //Removes Sign-in
-              window.router.off("/signIn")
+      //Adds order
+      window.router.on({
+        "/order": () => {
+          renderTemplate(templates.templateOrder, "content");
+          initOrder(); //<-- Remember to run your innit JS after the template render.
+        },
+      });
 
-              //Adds order
-              window.router.on({
-                "/order": () => {
-                renderTemplate(templates.templateOrder, "content")
-                initOrder() //<-- Remember to run your innit JS after the template render.
-                }
-              })
+      document.getElementById("menu-id").style.display = "block";
+      window.router.on({
+        "/menu": () => {
+          renderTemplate(templates.templateMenu, "content");
+          initMenu();
+        },
+      });
 
-              //Adds chatGPT
-              document.getElementById("chatGpt-id").style.display = "block" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-              window.router.on({
-                "/chatGpt": () => {
-                renderTemplate(templates.templateChatGpt, "content")
-                innitChatGpt() //<-- Remember to run your innit JS after the template render.
-                }
-              })
-              
-              //Removes recepter
-              document.getElementById("recepter-id").style.display = "none"
-              window.router.off("/recepter")
+      //Adds chatGPT
+      document.getElementById("chatGpt-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.on({
+        "/chatGpt": () => {
+          renderTemplate(templates.templateChatGpt, "content");
+          innitChatGpt(); //<-- Remember to run your innit JS after the template render.
+        },
+      });
 
-              //Removes add pizza
-              document.getElementById("addPizza-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-              window.router.off("/addPizza")
-              
-              //Adds about us
-              document.getElementById("about-id").style.display = "block"
-              window.router.on({
-                "/about": () => renderTemplate(templates.templateAbout, "content")
-              })
+      //Removes recepter
+      document.getElementById("recepter-id").style.display = "none";
+      window.router.off("/recepter");
 
-          } else if(localStorage.getItem("roles") == "ADMIN"){
-            /*
+      //Removes add pizza
+      document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.off("/addPizza");
+
+      //Adds about us
+      document.getElementById("about-id").style.display = "block";
+      window.router.on({
+        "/about": () => renderTemplate(templates.templateAbout, "content"),
+      });
+    } else if (localStorage.getItem("roles") == "ADMIN") {
+      /*
             
             //Everything where ADMIN can access. If you want to add a route for ADMIN, do it here;
 
@@ -203,130 +208,146 @@ export async function roleHandler(){
 
             */
 
-            //Adds Add Pizza
-            document.getElementById("addPizza-id").style.display = "block" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-            window.router.on({
-              "/addPizza": () => {
-              renderTemplate(templates.templateAddPizzas, "content")
-              initAddPizza() //<-- Remember to run your innit JS after the template render.
-              }
-            })
+      //Adds Add Pizza
+      document.getElementById("addPizza-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.on({
+        "/addPizza": () => {
+          renderTemplate(templates.templateAddPizzas, "content");
+          initAddPizza(); //<-- Remember to run your innit JS after the template render.
+        },
+      });
 
-            //Removes chatGpt ordering
-            document.getElementById("chatGpt-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-            window.router.off("/chatGpt")
+      document.getElementById("ingredients-id").style.display = "block";
+      window.router.on({
+        "/ingredients": () => {
+          renderTemplate(templates.templateIngredient, "content");
+          initIngredients();
+        },
+      });
 
-            //Adds all orders
-            document.getElementById("all-orders-id").style.display = "block" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-            window.router.on({
-              "/all-orders": () => {
-              renderTemplate(templates.templateAllOrders, "content")
-              innitAllOrders()
-              }
-            })
-           
-            document.getElementById("unconfirmed-orders-id").style.display = "block" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-            window.router.on({
-              "/unconfirmed-orders": () => {
-              renderTemplate(templates.templateUnconfirmedOrders, "content")
-              innitUnconfirmedOrders() 
-              }
-            })
+      document.getElementById("pizza-management-id").style.display = "block";
+      window.router.on({
+        "/pizzaBehandling": () => {
+          renderTemplate(templates.templatePizzaManagement, "content");
+          initPizzaManagement();
+        },
+      });
 
-            window.router.on({
-              "/orderReceiptChef": () => {
-              renderTemplate(templates.templateOrderReceiptChef, "content")
-              innitOrderReceiptChef() 
-              }
-            })
+      //Removes chatGpt ordering
+      document.getElementById("chatGpt-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.off("/chatGpt");
 
-            //Removes recepter
-            document.getElementById("recepter-id").style.display = "none"
-            window.router.off("/recepter")
+      //Adds all orders
+      document.getElementById("all-orders-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.on({
+        "/all-orders": () => {
+          renderTemplate(templates.templateAllOrders, "content");
+          innitAllOrders();
+        },
+      });
 
-            //Removes Sign-in
-            window.router.off("/signIn")
+      document.getElementById("unconfirmed-orders-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+      window.router.on({
+        "/unconfirmed-orders": () => {
+          renderTemplate(templates.templateUnconfirmedOrders, "content");
+          innitUnconfirmedOrders();
+        },
+      });
 
-            //Removes Order
-            window.router.off("/order")
+      window.router.on({
+        "/orderReceiptChef": () => {
+          renderTemplate(templates.templateOrderReceiptChef, "content");
+          innitOrderReceiptChef();
+        },
+      });
 
-            //Removes test
-            document.getElementById("about-id").style.display = "none"
-            window.router.off("/about")
-            console.log("ADMIN found!")
-            console.log("Removing about")
+      //Removes recepter
+      document.getElementById("recepter-id").style.display = "none";
+      window.router.off("/recepter");
 
-            //Removes Menu
-            document.getElementById("menu-id").style.display = "none"
-            window.router.off("/menu")
+      //Removes Sign-in
+      window.router.off("/signIn");
 
-            //Removes Receipts
+      //Removes Order
+      window.router.off("/order");
 
-          }
-          
-        } else {
-          //If no role is found, the user is anonymous.
+      //Removes test
+      document.getElementById("about-id").style.display = "none";
+      window.router.off("/about");
 
-          //Everything where ANONYMOUS can access.
+      //Removes Menu
+      document.getElementById("menu-id").style.display = "none";
+      window.router.off("/menu");
 
+      //Removes Receipts
+    }
+  } else {
+    //If no role is found, the user is anonymous.
 
-          console.log("ANONYMOUS found!")
-          //So the login is shown, and logout is removed.
-          document.getElementById("logout-id").style.display = "none"
-          window.router.off("/logout")
+    //Everything where ANONYMOUS can access.
 
-          //Adds order
-          window.router.on({
-            "/order": () => {
-            renderTemplate(templates.templateOrder, "content")
-            initOrder() //<-- Remember to run your innit JS after the template render.
-            }
-          })
+    //So the login is shown, and logout is removed.
+    document.getElementById("logout-id").style.display = "none";
+    window.router.off("/logout");
 
-          //Removes add pizza
-          document.getElementById("addPizza-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-          window.router.off("/addPizza")
+    //Adds order
+    window.router.on({
+      "/order": () => {
+        renderTemplate(templates.templateOrder, "content");
+        initOrder(); //<-- Remember to run your innit JS after the template render.
+      },
+    });
 
-          //Removes recepter
-          document.getElementById("recepter-id").style.display = "none"
-          window.router.off("/recepter")
+    document.getElementById("ingredients-id").style.display = "none";
+    window.router.off("/ingredients");
+    
+    document.getElementById("pizza-management-id").style.display = "none";
+    window.router.off("/pizzaBehandling");
 
-          //Removes chatGpt ordering
-          document.getElementById("chatGpt-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-          window.router.off("/chatGpt")
+    //Removes add pizza
+    document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+    window.router.off("/addPizza");
 
+    //Removes recepter
+    document.getElementById("recepter-id").style.display = "none";
+    window.router.off("/recepter");
 
-          //Adds back login, since now the user is ANONYMOUS
-          document.getElementById("login-id").style.display = "block"
-          window.router.on({
-          "/login": () => {
-            renderTemplate(templates.templateLogin, "content")
-            console.log("login loaded!")
-            initLogin()
-          }})
+    //Removes chatGpt ordering
+    document.getElementById("chatGpt-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+    window.router.off("/chatGpt");
 
-          window.router.on({
-          "/signIn": () => {
-            renderTemplate(templates.templateSignIn, "content")
-            console.log("signIn loaded!")
-            innitSignIn()
-          }})
+    //Adds back login, since now the user is ANONYMOUS
+    document.getElementById("login-id").style.display = "block";
+    window.router.on({
+      "/login": () => {
+        renderTemplate(templates.templateLogin, "content");
+        initLogin();
+      },
+    });
 
-          //Adds Menu
-          document.getElementById("menu-id").style.display = "block"
-          window.router.on({
-            "/menu": () => {
-              renderTemplate(templates.templateMenu, "content")
-              initMenu()
-            }})
+    window.router.on({
+      "/signIn": () => {
+        renderTemplate(templates.templateSignIn, "content");
+        initSignIn();
+      },
+    });
 
-            //Adds about us
-            document.getElementById("about-id").style.display = "block"
-            window.router.on({
-              "/about": () => renderTemplate(templates.templateAbout, "content")
-            })
+    //Adds Menu
+    document.getElementById("menu-id").style.display = "block";
+    window.router.on({
+      "/menu": () => {
+        renderTemplate(templates.templateMenu, "content");
+        initMenu();
+      },
+    });
 
-            /*
+    //Adds about us
+    document.getElementById("about-id").style.display = "block";
+    window.router.on({
+      "/about": () => renderTemplate(templates.templateAbout, "content"),
+    });
+
+    /*
           //Adds Recepter (commented because I have no idea where to put it, not described.)
           document.getElementById("recepter-id").style.display = "block"
           window.router.on({
@@ -336,23 +357,15 @@ export async function roleHandler(){
             }})
             */
 
-          //Removing test because no role is found.
-          console.log("removing test")
+    //Removing unconfirmed orders page
+    document.getElementById("unconfirmed-orders-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+    window.router.off("/unconfirmed-orders");
 
-          //Removing ADMIN pages here;
-          console.log("Removing admin pages!")
+    //Removing all orders page
+    document.getElementById("all-orders-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
+    window.router.off("/all-orders");
 
-          //Removing unconfirmed orders page
-          document.getElementById("unconfirmed-orders-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-          window.router.off("/unconfirmed-orders")
-
-          //Removing all orders page
-          document.getElementById("all-orders-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-          window.router.off("/all-orders")
-
-          //Removing orderReceiptChef (confirmed orders)
-          window.router.off("/orderReceiptChef")
-
-        }
-      }
-      
+    //Removing orderReceiptChef (confirmed orders)
+    window.router.off("/orderReceiptChef");
+  }
+}

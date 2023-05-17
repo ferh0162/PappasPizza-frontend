@@ -50,7 +50,7 @@ async function addPizza(event) {
   try {
     await fetch(URL + "/pizzas", options).then(handleHttpErrors);
     getPizzas();
-    window.router.forceNavigate("/pizzaBehandling")
+    window.router.Navigate("/pizzaBehandling")
 } catch (error) {
     console.log(error)
 }

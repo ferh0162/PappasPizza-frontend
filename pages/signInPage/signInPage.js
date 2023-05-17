@@ -1,6 +1,6 @@
 console.log("Trying to load signInPage!")
 import { makeOptions, handleHttpErrors } from "../../utils.js";
-import { LOCAL_API_URL } from "../../settings.js";
+import { REMOTE_API as URL } from "../../settings.js";
 
 export function initSignIn(){
 
@@ -58,7 +58,7 @@ async function signUp(user) {
   
   const options = makeOptions("POST", user, false) 
   try {
-      await fetch(LOCAL_API_URL+"/users",options).then(handleHttpErrors)
+      await fetch(URL +"/users",options).then(handleHttpErrors)
       document.getElementById("sysmessage").innerHTML = "Konto oprettet."
       document.querySelector("form").reset()
   } catch (err) {

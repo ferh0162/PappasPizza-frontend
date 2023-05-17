@@ -1,3 +1,5 @@
+import { REMOTE_API as URL } from "../settings.js";
+
 const pizzas = [];
 const drinks = [];
 let cart = [];
@@ -36,7 +38,7 @@ console.log("shoppingcart is loaded!")
 
 async function fetchPizza() {
   try {
-    const response = await fetch("http://localhost:8080/api/pizzas");
+    const response = await fetch(URL + "/pizzas");
     const data = await response.json();
 
     data.forEach((pizza) => {
@@ -63,7 +65,7 @@ async function fetchPizza() {
 
 async function fetchDrink() {
   try {
-    const response = await fetch("http://localhost:8080/api/drinks");
+    const response = await fetch( URL + "/drinks");
     const data = await response.json();
 
     data.forEach((drink) => {
