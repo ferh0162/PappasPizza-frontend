@@ -35,51 +35,55 @@ for (const option of deliveryOptions) {
 console.log("shoppingcart is loaded!")
 
 async function fetchPizza() {
-  try {
-    const response = await fetch("http://localhost:8080/api/pizzas");
-    const data = await response.json();
+  if (pizzas.length === 0) { // Only fetch if the array is empty
+    try {
+      const response = await fetch("http://localhost:8080/api/pizzas");
+      const data = await response.json();
 
-    data.forEach((pizza) => {
-      const ingredients = pizza.ingredients.map((ingredient) => ({
-        id: ingredient.id,
-        name: ingredient.name,
-        price: ingredient.price,
-      }));
+      data.forEach((pizza) => {
+        const ingredients = pizza.ingredients.map((ingredient) => ({
+          id: ingredient.id,
+          name: ingredient.name,
+          price: ingredient.price,
+        }));
 
-      pizzas.push({
-        id: pizza.id,
-        name: pizza.name,
-        price: pizza.price,
-        ingredients: ingredients,
+        pizzas.push({
+          id: pizza.id,
+          name: pizza.name,
+          price: pizza.price,
+          ingredients: ingredients,
+        });
       });
-    });
 
-    console.log(pizzas);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-
-async function fetchDrink() {
-  try {
-    const response = await fetch("http://localhost:8080/api/drinks");
-    const data = await response.json();
-
-    data.forEach((drink) => {
-      drinks.push({
-        id: drink.id,
-        name: drink.brand,
-        price: drink.price,
-        size: drink.size,
-      });
-    });
-
-    console.log(drinks);
-  } catch (error) {
-    console.error("Error fetching data:", error);
+      console.log(pizzas);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 }
+
+async function fetchDrink() {
+  if (drinks.length === 0) { // Only fetch if the array is empty
+    try {
+      const response = await fetch("http://localhost:8080/api/drinks");
+      const data = await response.json();
+
+      data.forEach((drink) => {
+        drinks.push({
+          id: drink.id,
+          name: drink.brand,
+          price: drink.price,
+          size: drink.size,
+        });
+      });
+
+      console.log(drinks);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+}
+
 
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
