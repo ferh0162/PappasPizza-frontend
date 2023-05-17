@@ -100,7 +100,7 @@ function saveUserInformation(event) {
         }).then(response => response.json()).then(data => {
             console.log("Order response", data);
             localStorage.removeItem('cart'); // Clear the cart
-            location.reload(); // Refresh the page
+            window.router.navigate("/menu")
             // Redirect the user, display a confirmation message, etc.
         }).catch(error => {
             console.error("Error:", error);
