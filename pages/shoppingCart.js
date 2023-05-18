@@ -1,89 +1,92 @@
 const pizzas = [];
 const drinks = [];
+const ingredients = [];
 let cart = [];
+
 export async function initMenu() {
-
-
   await fetchPizza();
   await fetchDrink();
+  await fetchIngredients();
 
   displayItems(pizzas, "pizza-list", "pizza-item");
   displayItems(drinks, "drinks-list", "drink-item");
 
-  // Check if there is cart data stored in localStorage
   const storedCart = localStorage.getItem("cart");
   if (storedCart) {
     cart = JSON.parse(storedCart);
     updateCart();
   }
 
-  // Add event listeners and populate the menu items
-const clearCartButton = document.getElementById("clear-cart-button");
-clearCartButton.addEventListener("click", () => {
-  cart = [];
-  updateCart();
-});
+  document.getElementById("clear-cart-button").addEventListener("click", () => {
+    cart = [];
+    updateCart();
+  });
 
-const deliveryOptions = document.getElementsByName("deliveryOptions");
-for (const option of deliveryOptions) {
-  option.addEventListener("change", updateCart);
+  for (const option of document.getElementsByName("deliveryOptions")) {
+    option.addEventListener("change", updateCart);
+  }
 }
-
-
-}
-
-console.log("shoppingcart is loaded!")
 
 async function fetchPizza() {
-  if (pizzas.length === 0) { // Only fetch if the array is empty
-    try {
-      const response = await fetch("http://localhost:8080/api/pizzas");
-      const data = await response.json();
+  try {
+    const response = await fetch("http://localhost:8080/api/pizzas");
+    const data = await response.json();
 
-      data.forEach((pizza) => {
-        const ingredients = pizza.ingredients.map((ingredient) => ({
-          id: ingredient.id,
-          name: ingredient.name,
-          price: ingredient.price,
-        }));
+    data.forEach((pizza) => {
+      const ingredients = pizza.ingredients.map((ingredient) => ({
+        id: ingredient.id,
+        name: ingredient.name,
+        price: ingredient.price,
+      }));
 
-        pizzas.push({
-          id: pizza.id,
-          name: pizza.name,
-          price: pizza.price,
-          ingredients: ingredients,
-        });
+      pizzas.push({
+        id: pizza.id,
+        name: pizza.name,
+        price: pizza.price,
+        ingredients: ingredients,
       });
-
-      console.log(pizzas);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
   }
 }
 
 async function fetchDrink() {
-  if (drinks.length === 0) { // Only fetch if the array is empty
+  try {
+    const response = await fetch("http://localhost:8080/api/drinks");
+    const data = await response.json();
+
+    data.forEach((drink) => {
+      drinks.push({
+        id: drink.id,
+        name: drink.brand,
+        price: drink.price,
+        size: drink.size,
+      });
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+async function fetchIngredients() {
+  if (ingredients.length === 0) {
     try {
-      const response = await fetch("http://localhost:8080/api/drinks");
+      const response = await fetch("http://localhost:8080/api/ingredients");
       const data = await response.json();
 
-      data.forEach((drink) => {
-        drinks.push({
-          id: drink.id,
-          name: drink.brand,
-          price: drink.price,
-          size: drink.size,
+      data.forEach((ingredient) => {
+        ingredients.push({
+          id: ingredient.id,
+          name: ingredient.name,
+          price: ingredient.price,
         });
       });
-
-      console.log(drinks);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
 }
-
 
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
@@ -95,53 +98,81 @@ function displayItems(items, containerId, itemClass) {
 
     if (itemClass === "pizza-item") {
       const ingredientNames = item.ingredients.map((ingredient) => ingredient.name).join(", ");
-      additionalInfo = `<p class="card-text additional-info">${ingredientNames}</p>`;
+      additionalInfo = `<p class="card-text additional-info">Ingredients: ${ingredientNames}</p>`;
+
+      div.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${item.id}. ${item.name}</h5>
+            <p class="card-text">${item.price} kr.</p>
+            ${additionalInfo}
+            <button class="btn btn-custom addToCart">Add to cart</button>
+          </div>
+        </div>`;
     } else if (itemClass === "drink-item") {
-      additionalInfo = `<p class="card-text additional-info">Size: ${item.size} </p>`;
+      div.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${item.name}</h5>
+            <p class="card-text">${item.size}</p>
+            <p class="card-text">${item.price} kr.</p>
+            <button class="btn btn-custom addToCart">Add to cart</button>
+          </div>
+        </div>`;
     }
 
-    div.innerHTML = `
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">${item.id}. ${item.name}</h5>
-          <p class="card-text">${item.price} kr.</p>
-          `+additionalInfo+`
-        </div>
-      </div>`;
+    div.querySelector(".addToCart").addEventListener("click", () => {
+      if (itemClass === "pizza-item") {
+        openIngredientModal(item.id);
+      } else {
+        addToCart(item.id, true);
+      }
+    });
 
-    const button = document.createElement("button");
-    button.className = "btn btn-custom";
-    button.innerText = "Add to cart";
-    button.addEventListener("click", () => addToCart(item.id, itemClass === "drink-item"));
-
-    div.querySelector('.card .card-body').appendChild(button);
     container.appendChild(div);
   }
 }
 
 
+
 function addToCart(itemId, isDrink = false) {
-  const item = isDrink
-    ? drinks.find((d) => d.id === itemId)
-    : pizzas.find((p) => p.id === itemId);
+  const item = isDrink ? drinks.find((d) => d.id === itemId) : pizzas.find((p) => p.id === itemId);
   if (!item) return;
 
-  const index = cart.findIndex(
-    (cartItem) => cartItem.id === item.id && cartItem.isDrink === isDrink
+  const extras = [];
+  const checkboxes = document.querySelectorAll(`input[name="extra-ingredients-${itemId}"]:checked`);
+  for (const checkbox of checkboxes) {
+    const ingredientId = parseInt(checkbox.value);
+    const ingredient = ingredients.find(ingredient => ingredient.id === ingredientId);
+    if (ingredient) {
+      extras.push(ingredient);
+    }
+  }
+
+  // Check if the item with the same id and extras already exists in the cart
+  const index = cart.findIndex((cartItem) => 
+    cartItem.id === item.id && 
+    cartItem.isDrink === isDrink &&
+    JSON.stringify(cartItem.added.sort()) === JSON.stringify(extras.sort())
   );
 
   if (index === -1) {
-    cart.push({ ...item, quantity: 1, isDrink: isDrink });
+    cart.push({ ...item, quantity: 1, isDrink: isDrink, added: extras });
   } else {
     cart[index].quantity += 1;
   }
+
   updateCart();
 }
 
-function removeFromCart(itemId, isDrink = false) {
-  const index = cart.findIndex(
-    (cartItem) => cartItem.id === itemId && cartItem.isDrink === isDrink
+function removeFromCart(itemId, isDrink = false, extras = []) {
+  // Check if the item with the same id and extras exists in the cart
+  const index = cart.findIndex((cartItem) => 
+    cartItem.id === itemId && 
+    cartItem.isDrink === isDrink &&
+    JSON.stringify(cartItem.added.sort()) === JSON.stringify(extras.sort())
   );
+
   if (index !== -1) {
     cart[index].quantity -= 1;
     if (cart[index].quantity === 0) {
@@ -151,48 +182,81 @@ function removeFromCart(itemId, isDrink = false) {
   }
 }
 
-function updateQuantity(itemId, newQuantity) {
-  const index = cart.findIndex((cartItem) => cartItem.id === itemId);
- 
-  if (index !== -1) {
-    cart[index].quantity = newQuantity;
-    updateCart();
+
+function updateCart() {
+  const cartItems = document.getElementById("cart-items");
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  for (const item of cart) {
+    const li = document.createElement("li");
+    li.className = "cart-item";
+
+    const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
+
+    // Add list of added ingredients
+    const addedIngredients = item.added.map(ingredient => ingredient.name).join(", ");
+    const addedIngredientsHtml = addedIngredients ? `<div class="added-ingredients">+ ${addedIngredients}</div>` : "";
+
+    li.innerHTML = `
+      <span class="item-id">${itemDetails}</span>
+      <div class="item-name-wrapper">
+        <span class="item-name">${item.name}</span>
+        ${addedIngredientsHtml}
+      </div>
+      <span class="item-price">${item.price} kr.</span>
+      <span class="item-quantity">x${item.quantity}</span>
+    `;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-btn";
+    removeBtn.innerText = "X";
+    removeBtn.addEventListener("click", () => removeFromCart(item.id, item.isDrink, item.added));
+
+    li.appendChild(removeBtn);
+    cartItems.appendChild(li);
+
+    total += item.price * item.quantity;
+
+    // Add cost of added ingredients
+    for (const added of item.added) {
+      total += added.price * item.quantity;
+    }
   }
+
+  if (document.getElementById("delivery").checked) {
+    total += 50;
+  }
+
+  document.getElementById("cart-total").innerText = total.toFixed(2);
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-  function updateCart() {
-    const cartItems = document.getElementById("cart-items");
-    cartItems.innerHTML = "";
-    let total = 0;
-    
-    for (const item of cart) {
-      const li = document.createElement("li");
-      li.className = "cart-item";
+function openIngredientModal(pizzaId) {
+  const modal = document.getElementById("ingredient-modal");
+  const ingredientList = document.getElementById("ingredient-list");
+  ingredientList.innerHTML = '<div class="row"><div class="col-sm-4 ingredient-col" id="ingredient-col-1"></div><div class="col-sm-4 ingredient-col" id="ingredient-col-2"></div><div class="col-sm-4 ingredient-col" id="ingredient-col-3"></div></div>';
   
-      const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
-  
-      li.innerHTML = `
-        <span class="item-id">${itemDetails}</span>
-        <span class="item-name">${item.name}</span>
-        <span class="item-price">${item.price} kr.</span>
-        <span class="item-quantity">x${item.quantity}</span>
-      `;
-  
-      const removeBtn = document.createElement("button");
-      removeBtn.className = "remove-btn";
-      removeBtn.innerText = "X";
-      removeBtn.addEventListener("click", () => removeFromCart(item.id, item.isDrink));
-  
-      li.appendChild(removeBtn);
-      cartItems.appendChild(li);
-  
-      total += item.price * item.quantity;
-    }
-  
-    if (document.getElementById("delivery").checked) {
-      total += 50;
-    }
-  
-    document.getElementById("cart-total").innerText = total.toFixed(2);
-    localStorage.setItem("cart", JSON.stringify(cart));
+  for (let i = 0; i < ingredients.length; i++) {
+    const ingredient = ingredients[i];
+    const colNumber = i % 3 + 1;
+    document.getElementById(`ingredient-col-${colNumber}`).innerHTML += `
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="${ingredient.id}" id="extra-ingredients-${ingredient.id}-${pizzaId}" name="extra-ingredients-${pizzaId}">
+        <label class="form-check-label" for="extra-ingredients-${ingredient.id}-${pizzaId}">
+          ${ingredient.name}
+        </label>
+      </div>`;
   }
+
+  document.getElementById("add-to-cart-modal").onclick = () => {
+    addToCart(pizzaId);
+    modal.style.display = "none";
+  };
+
+  document.getElementById("close-ingredient-modal").onclick = () => {
+    modal.style.display = "none";
+  };
+  
+  modal.style.display = "block";
+}

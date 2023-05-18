@@ -17,12 +17,16 @@ function displayCartItems() {
             const li = document.createElement("li");
             li.className = "cart-item";
             const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
-    
+
+            // Create the added ingredients section with a "+" sign
+            const addedList = item.added ? item.added.map(ingredient => `+${ingredient.name}`).join('<br>') : '';
+
             li.innerHTML = `
-                <span class="item-id">${itemDetails}</span>
-                <span class="item-name">${item.name}</span>
-                <span class="item-price">${item.price} kr.</span>
-                <span class="item-quantity">x${item.quantity}</span>
+                <div class="item-id">${itemDetails}</div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-added">${addedList}</div>
+                <div class="item-price">${item.price} kr.</div>
+                <div class="item-quantity">x${item.quantity}</div>
             `;
     
             cartItems.appendChild(li);
@@ -31,8 +35,10 @@ function displayCartItems() {
   
         document.getElementById("cart-total").innerText = total.toFixed(2);
     }
-    console.log(storedCart)
 }
+
+
+
 
 function saveUserInformation(event) {
     event.preventDefault();

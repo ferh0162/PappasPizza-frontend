@@ -65,3 +65,49 @@ button {
 button:hover {
     background-color: #d35400;
 }
+
+#cart-items {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.cart-item .item-id,
+.cart-item .item-name,
+.cart-item .item-ingredients,
+.cart-item .item-added,
+.cart-item .item-price,
+.cart-item .item-quantity {
+    margin: 0 10px;
+}
+
+.item-name {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.item-added {
+    color: gray;
+    font-size: 0.9rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.col-width {
+    width: 37.33%;
+}
