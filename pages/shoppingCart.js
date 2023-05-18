@@ -195,8 +195,8 @@ function updateCart() {
     const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
 
     // Add list of added ingredients
-    const addedIngredients = item.added.map(ingredient => ingredient.name).join(", ");
-    const addedIngredientsHtml = addedIngredients ? `<div class="added-ingredients">+ ${addedIngredients}</div>` : "";
+    const addedIngredients = item.added.map(ingredient => `+ ${ingredient.name}`).join("<br>");
+    const addedIngredientsHtml = addedIngredients ? `<div class="added-ingredients">${addedIngredients}</div>` : "";
 
     li.innerHTML = `
       <span class="item-id">${itemDetails}</span>
@@ -235,18 +235,26 @@ function updateCart() {
 function openIngredientModal(pizzaId) {
   const modal = document.getElementById("ingredient-modal");
   const ingredientList = document.getElementById("ingredient-list");
-  ingredientList.innerHTML = '<div class="row"><div class="col-sm-4 ingredient-col" id="ingredient-col-1"></div><div class="col-sm-4 ingredient-col" id="ingredient-col-2"></div><div class="col-sm-4 ingredient-col" id="ingredient-col-3"></div></div>';
-  
+  ingredientList.innerHTML = '';
+
   for (let i = 0; i < ingredients.length; i++) {
     const ingredient = ingredients[i];
-    const colNumber = i % 3 + 1;
-    document.getElementById(`ingredient-col-${colNumber}`).innerHTML += `
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="${ingredient.id}" id="extra-ingredients-${ingredient.id}-${pizzaId}" name="extra-ingredients-${pizzaId}">
-        <label class="form-check-label" for="extra-ingredients-${ingredient.id}-${pizzaId}">
-          ${ingredient.name}
-        </label>
-      </div>`;
+    const checkbox = document.createElement("input");
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("value", ingredient.id);
+    checkbox.setAttribute("id", `extra-ingredients-${ingredient.id}-${pizzaId}`);
+    checkbox.setAttribute("name", `extra-ingredients-${pizzaId}`);
+
+    const label = document.createElement("label");
+    label.setAttribute("for", `extra-ingredients-${ingredient.id}-${pizzaId}`);
+    label.innerText = `${ingredient.name} - ${ingredient.price} kr.`;
+
+    const ingredientItem = document.createElement("div");
+    ingredientItem.classList.add("ingredient-item");
+    ingredientItem.appendChild(checkbox);
+    ingredientItem.appendChild(label);
+
+    ingredientList.appendChild(ingredientItem);
   }
 
   document.getElementById("add-to-cart-modal").onclick = () => {
@@ -257,6 +265,8 @@ function openIngredientModal(pizzaId) {
   document.getElementById("close-ingredient-modal").onclick = () => {
     modal.style.display = "none";
   };
-  
+
   modal.style.display = "block";
 }
+
+

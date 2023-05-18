@@ -2,6 +2,9 @@ export function innitOrder() {
     console.log("Hello from Order");
     displayCartItems();
     document.getElementById('userForm').addEventListener('submit', saveUserInformation);
+
+    
+ 
 }
 
 
@@ -20,22 +23,30 @@ function displayCartItems() {
 
             // Create the added ingredients section with a "+" sign
             const addedList = item.added ? item.added.map(ingredient => `+${ingredient.name}`).join('<br>') : '';
+            const addedPrice = item.added ? item.added.reduce((total, ingredient) => total + ingredient.price, 0) : 0;
 
             li.innerHTML = `
                 <div class="item-id">${itemDetails}</div>
                 <div class="item-name">${item.name}</div>
                 <div class="item-added">${addedList}</div>
-                <div class="item-price">${item.price} kr.</div>
+                <div class="item-price">${item.price + addedPrice} kr.</div>
                 <div class="item-quantity">x${item.quantity}</div>
             `;
     
             cartItems.appendChild(li);
-            total += item.price * item.quantity;
+            total += (item.price + addedPrice) * item.quantity;
+        }
+
+        // Add 50 to the total if delivery is checked
+        if (document.getElementById("delivery").checked) {
+            total += 50;
         }
   
         document.getElementById("cart-total").innerText = total.toFixed(2);
     }
 }
+
+
 
 
 
