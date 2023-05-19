@@ -107,7 +107,6 @@ function saveUserInformation(event) {
             status: 'FRESH' // assuming order status is fresh on submission
         };
 
-        // Send the order request to the server
         fetch("http://localhost:8080/api/orders/addOrder", {
             method: "POST",
             headers: {
@@ -117,10 +116,54 @@ function saveUserInformation(event) {
         }).then(response => response.json()).then(data => {
             console.log("Order response", data);
             localStorage.removeItem('cart'); // Clear the cart
-            window.router.navigate("/menu")
-            // Redirect the user, display a confirmation message, etc.
+        
+            // Fetch the confirmation div and the userForm
+            let confirmation = document.getElementById('confirmation');
+            let userForm = document.getElementById('userForm');
+            let cartDiv = document.querySelector('.card.cart');
+        
+            // Hide the form and cart
+            userForm.style.display = 'none';
+            cartDiv.style.display = 'none';
+        
+            // Build a string with the confirmation details
+            let confirmationDetails = `
+                <h2>Order Confirmation</h2>
+                <p>Order Id: ${data.id}</p>
+                <p>Name: ${data.name}</p>
+                <p>Phone Number: ${data.phoneNumber}</p>
+                <p>Address: ${data.address}</p>
+                <p>Postal Code: ${data.postalCode}</p>
+                <p>Pick Up Time: ${data.pickUpTime}</p>
+                <p>Order Status: ${data.status === null ? 'Pending' : data.status}</p>
+                <h3>Order Items:</h3>
+            `;
+        
+            // Add information for each item in the order
+            for (let item of data.orderItems) {
+                let ingredients = item.consumable.ingredients.map(ing => ing.name).join(', ');
+                let added = item.added.map(ing => ing.name).join(', ');
+                let removed = item.removed.map(ing => ing.name).join(', ');
+        
+                confirmationDetails += `
+                    <p>Item ID: ${item.id}</p>
+                    <p>Name: ${item.consumable.name}</p>
+                    <p>Price: ${item.consumable.price}</p>
+                    <p>Ingredients: ${ingredients}</p>
+                    <p>Added: ${added}</p>
+                    <p>Removed: ${removed}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                `;
+            }
+        
+            // Insert the confirmation details into the 'confirmation' div and display it
+            confirmation.innerHTML = confirmationDetails;
+            confirmation.style.display = 'block';
+            document.getElementById("user-header").style.display = "none";
         }).catch(error => {
             console.error("Error:", error);
         });
+        
+        
     }
 }
