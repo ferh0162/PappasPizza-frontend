@@ -98,7 +98,7 @@ function displayItems(items, containerId, itemClass) {
 
     if (itemClass === "pizza-item") {
       const ingredientNames = item.ingredients.map((ingredient) => ingredient.name).join(", ");
-      additionalInfo = `<p class="card-text additional-info">Ingredients: ${ingredientNames}</p>`;
+      additionalInfo = `<p class="card-text additional-info">${ingredientNames}</p>`;
 
       div.innerHTML = `
         <div class="card">
