@@ -5,7 +5,12 @@ import {
   adjustForMissingHash,
   renderTemplate,
   loadTemplate,
+  handleHttpErrors,
 } from "./utils.js";
+
+import{LOCAL_API as URL} from "./settings.js"
+
+
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initReceipts } from "./pages/recepter/recepter.js";
@@ -24,7 +29,25 @@ import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js"
 
 let templates = {};
 
+async function initWeatherStatus(){
+
+  const weatherData = await fetch(URL+"/weather").then(handleHttpErrors)
+
+  const icon = weatherData.icon;
+
+  document.getElementById("address-id").innerHTML=
+  `Adresse: Vigerslev Allé 122, 2500 København <br>
+  Tlf: 50 16 26 50`
+
+  document.getElementById("weatherTemp-id").innerHTML=((weatherData.temperature - 273.15).toFixed(1)) + " °C"
+
+  document.getElementById("weatherStatus-id").src=`https://openweathermap.org/img/wn/${icon}@2x.png`
+}
+
 window.addEventListener("load", async () => {
+
+  await initWeatherStatus();
+
   templates.templateMenu = await loadTemplate("./pages/menu.html");
   templates.templateAbout = await loadTemplate(
     "./pages/aboutPage/aboutPage.html"
@@ -145,6 +168,9 @@ export async function roleHandler() {
     if (localStorage.getItem("roles") == "USER") {
       //Everything where USER can access.
 
+      //Adds sidebar
+      document.getElementById("sidebar-id").style.display = "block"
+
       //Removes Sign-in
       window.router.off("/signIn");
 
@@ -161,6 +187,7 @@ export async function roleHandler() {
         "/menu": () => {
           renderTemplate(templates.templateMenu, "content");
           initMenu();
+          
         },
       });
 
@@ -184,7 +211,9 @@ export async function roleHandler() {
       //Adds about us
       document.getElementById("about-id").style.display = "block";
       window.router.on({
-        "/about": () => renderTemplate(templates.templateAbout, "content"),
+        "/about": () => {
+          renderTemplate(templates.templateAbout, "content")
+        }
       });
     } else if (localStorage.getItem("roles") == "ADMIN") {
       /*
@@ -207,6 +236,9 @@ export async function roleHandler() {
             window.router.off("/example")
 
             */
+
+      //Removes the status sidebar
+      document.getElementById("sidebar-id").style.display = "none" //ONLY IF THE ELEMENT EXISTS ON THE HEADER
 
       //Adds Add Pizza
       document.getElementById("addPizza-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
@@ -290,6 +322,9 @@ export async function roleHandler() {
     document.getElementById("logout-id").style.display = "none";
     window.router.off("/logout");
 
+    //Adds sidebar
+    document.getElementById("sidebar-id").style.display = "block"
+
     //Adds order
     window.router.on({
       "/order": () => {
@@ -318,6 +353,7 @@ export async function roleHandler() {
 
     //Adds back login, since now the user is ANONYMOUS
     document.getElementById("login-id").style.display = "block";
+
     window.router.on({
       "/login": () => {
         renderTemplate(templates.templateLogin, "content");
@@ -368,4 +404,5 @@ export async function roleHandler() {
     //Removing orderReceiptChef (confirmed orders)
     window.router.off("/orderReceiptChef");
   }
+
 }

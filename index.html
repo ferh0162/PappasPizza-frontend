@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="styles/meny-styles-non-responsive.css" />
     <link rel="stylesheet" href="styles/pizza-management.css" />
+    <link rel="stylesheet" href="styles/statusBar.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 
@@ -75,7 +76,16 @@
     <div id="content" style="margin:15px;"></div>
   </div>
 
-  <p id="error">Error Message Here</p>
+  <div id="sidebar-id" class="sidebar">
+    <div class="weather">
+    <img id="weatherStatus-id">
+    <p id="weatherTemp-id" class="bottom-text"></p>
+    </div>
+    <img src="pictures/pappas.jpg" alt="Sidebar Image" class="sidebar-image"/>
+    <p id="address-id" class="top-text"></p>
+  </div>
+
+  <p id="error"></p>
   
             <script src="index.js" type="module"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
