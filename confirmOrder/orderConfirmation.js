@@ -17,6 +17,28 @@ function displayOrderInfo() {
   for (const item of order.orderItems) {
     if(item.consumable.name) { // if it's a pizza
       orderData += `<div class="order-item"><p><strong>${item.consumable.name}</strong></p>`;
+      // Displaying base ingredients
+      orderData += `<p>Base Ingredients:</p><ul>`;
+      for (const ingredient of item.consumable.ingredients) {
+        orderData += `<li>${ingredient.name} (Price: ${ingredient.price})</li>`;
+      }
+      orderData += `</ul>`;
+      // Displaying added ingredients
+      if(item.added.length > 0) {
+        orderData += `<p>Added Ingredients:</p><ul>`;
+        for (const add of item.added) {
+          orderData += `<li>${add.name} (Price: ${add.price})</li>`;
+        }
+        orderData += `</ul>`;
+      }
+      // Displaying removed ingredients
+      if(item.removed.length > 0) {
+        orderData += `<p>Removed Ingredients:</p><ul>`;
+        for (const remove of item.removed) {
+          orderData += `<li>${remove.name} (Price: ${remove.price})</li>`;
+        }
+        orderData += `</ul>`;
+      }
     } else if(item.consumable.brand) { // if it's a drink
       orderData += `<div class="order-item"><p><strong>${item.consumable.brand.brand} - ${item.consumable.drinkSize.size}</strong></p>`;
     }
@@ -26,6 +48,7 @@ function displayOrderInfo() {
   
   orderInfo.innerHTML = orderData;
 }
+
 
   
 

@@ -58,6 +58,7 @@ function displayCartItems() {
 
 
 // Save user information
+// Save user information
 function saveUserInformation(event) {
     event.preventDefault();
 
@@ -84,7 +85,7 @@ function saveUserInformation(event) {
             let pizzaTypeId = null;
     
             // Checking if ingredients are present, if not it's a drink
-            if(item.ingredients) {
+            if (item.ingredients) {
                 pizzaId = item.id;
                 pizzaTypeId = item.pizzaTypeId; // assuming that pizzaTypeId is a property of item
             } else {
@@ -150,7 +151,7 @@ function saveUserInformation(event) {
         
             // Add information for each item in the order
             for (let item of data.orderItems) {
-                let ingredients = item.consumable.ingredients.map(ing => ing.name).join(', ');
+                let ingredients = item.consumable.ingredients ? item.consumable.ingredients.map(ing => ing.name).join(', ') : '';
                 let added = item.added.map(ing => ing.name).join(', ');
                 let removed = item.removed.map(ing => ing.name).join(', ');
         
