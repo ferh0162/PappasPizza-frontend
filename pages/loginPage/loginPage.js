@@ -71,16 +71,21 @@ async function login(evt) {
     //Makes the correct button show, based on if the user is logged in or not.
     
     console.log(localStorage.getItem("roles"))
+/*
+    if (localStorage.getItem("roles", response.roles)=="ADMIN") {
 
+      //document.getElementById("showUsers").style.display="block"
+      //Add pages that are available to the admin. Like this ^
+
+    } else {
+
+     //Add pages that are available to the user.
+     
+    }
+*/
     await roleHandler();
 
-    //Have to fix the issue where the rolehandler removes the "/", since it's going there by default whenever login is successful.
-    if (localStorage.getItem("roles", response.roles)=="ADMIN") {
-      window.router.navigate("/all-orders")
-    } else if(localStorage.getItem("roles", response.roles)=="USER") {
-      window.router.navigate("/")
-    }
-
+    window.router.navigate("")
   } catch (err) {
     //Make sure that the error ID is the correct one.
     document.getElementById("error").innerText = err.message

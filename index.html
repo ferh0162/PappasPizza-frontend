@@ -11,8 +11,6 @@
 
     <link rel="stylesheet" href="styles/meny-styles-non-responsive.css" />
     <link rel="stylesheet" href="styles/pizza-management.css" />
-    <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" href="styles/orderConfirmation.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 
@@ -25,8 +23,8 @@
   <div id="topnav">
     <nav  id="menu" class="menu-horizontal">
       <ul id="nav-items-left" class="nav-items-left">
-        <li id="menu-id">
-          <a href="/menu" data-navigo>Menu</a>
+        <li>
+          <a href="/" data-navigo>Home</a>
         </li>
         <li id="unconfirmed-orders-id" style="display:none">
           <a href="/unconfirmed-orders" data-navigo>Ubekræftede ordre</a>
@@ -40,11 +38,14 @@
         </li>
       </ul>
       <div class="logo-container">
-        <a id="center-id" href="/menu" data-navigo>
+        <a href="#">
           <img src="pictures/pizzalogo.png" alt="PappasPizza" class="logo">
         </a>
       </div>
       <ul class="nav-items-right">
+        <li id="menu-id">
+          <a href="/menu" data-navigo>Menu</a>
+        </li>
         <li id="chatGpt-id" style="display: none;">
           <a href="/chatGpt" data-navigo>AI-Pizza</a>
         </li>
@@ -54,24 +55,27 @@
         <li id="signIn-id">
           <a href="/signIn" data-navigo>Tilmeld</a>
         </li>
-          <li id="ingredients-id" style="display: none;">
-              <a href="/ingredients" data-navigo>Ingredienser</a>
-          </li>
-        <li id="pizza-management-id" style="display: none;">
-          <a href="/pizzaBehandling" data-navigo>Pizza Behandling</a>
-        </li>
+        <li id="addPizza-id" style="display: none;">
+          <a href="/addPizza" data-navigo>Tilføj Pizza</a>
+        </li>  
         <li id="login-id">
           <a href="/login" data-navigo>Login</a>
         </li>
         <li id="logout-id" style="display:none">
           <a href="/logout" data-navigo>Logout</a>
         </li>
+          <li id="ingredients-id">
+              <a href="/ingredients" data-navigo>Ingredienser</a>
+          </li>
+        <li id="pizza-management-id">
+          <a href="/pizzaBehandling" data-navigo>Pizza Behandling</a>
+        </li>
       </ul>
     </nav>
     <div id="content" style="margin:15px;"></div>
   </div>
 
-  <p id="error"></p>
+  <p id="error">Error Message Here</p>
   
             <script src="index.js" type="module"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
