@@ -1,4 +1,4 @@
-import {LOCAL_API as API_URL} from "../../settings.js" 
+import {REMOTE_API as API_URL} from "../../settings.js" 
 
 export async function innitAllOrders() {
   const URL = API_URL + "/orders";

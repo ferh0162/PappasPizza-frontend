@@ -23,7 +23,6 @@ import { initMenu } from "./pages/shoppingCart.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
 import { innitOrder as initOrder } from "./pages/order/order.js";
 import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js";
-import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js";
 import { initIngredients } from "./pages/ingredients/ingredients.js";
 import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js";
 
@@ -59,9 +58,6 @@ window.addEventListener("load", async () => {
   templates.templateOrder = await loadTemplate("./pages/order/order.html");
   templates.templateChatGpt = await loadTemplate(
     "./pages/chatGPTPage/chatGPTPage.html"
-  );
-  templates.templateAddPizzas = await loadTemplate(
-    "./pages/addPizzasPage/addPizzasPage.html"
   );
   templates.templateIngredient = await loadTemplate(
     "./pages/ingredients/ingredients.html"
@@ -186,10 +182,6 @@ export async function roleHandler() {
       document.getElementById("recepter-id").style.display = "none";
       window.router.off("/recepter");
 
-      //Removes add pizza
-      document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-      window.router.off("/addPizza");
-
       //Adds about us
       document.getElementById("about-id").style.display = "block";
       window.router.on({
@@ -221,15 +213,6 @@ export async function roleHandler() {
             window.router.off("/example")
 
             */
-
-      //Adds Add Pizza
-      document.getElementById("addPizza-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-      window.router.on({
-        "/addPizza": () => {
-          renderTemplate(templates.templateAddPizzas, "content");
-          initAddPizza(); //<-- Remember to run your innit JS after the template render.
-        },
-      });
 
       document.getElementById("ingredients-id").style.display = "block";
       window.router.on({
@@ -330,13 +313,6 @@ export async function roleHandler() {
     //Removes pizza management
     document.getElementById("pizza-management-id").style.display = "none";
     window.router.off("/pizzaBehandling");
-
-
-
-    //Removes add pizza
-    document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-    window.router.off("/addPizza");
-
 
 
     //Removes recepter
