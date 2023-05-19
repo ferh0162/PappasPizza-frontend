@@ -52,6 +52,7 @@ function setPickupTime(minutes, button) {
   console.log(`Pickup time set for ${pickupTimeString}`);
 }
   
+//Old name fetchOrders
 export async function innitUnconfirmedOrders() {
   try {
     const response = await fetch('http://localhost:8080/api/orders/viewNonConfirmed');
