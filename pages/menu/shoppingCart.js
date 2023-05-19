@@ -1,3 +1,4 @@
+import { LOCAL_API as URL} from "../../settings.js"
 // Declare empty arrays to store pizzas, drinks, ingredients, and the shopping cart
 const pizzas = [];
 const drinks = [];
@@ -37,7 +38,7 @@ export async function initMenu() {
 // Fetch pizzas from the server
 async function fetchPizza() {
   try {
-    const response = await fetch("http://localhost:8080/api/pizzas");
+    const response = await fetch(URL + "/pizzas");
     const data = await response.json();
 
     // Process the fetched data and add pizzas to the array
@@ -63,7 +64,7 @@ async function fetchPizza() {
 // Fetch drinks from the server
 async function fetchDrink() {
   try {
-    const response = await fetch("http://localhost:8080/api/drinks");
+    const response = await fetch(URL +"/drinks");
     const data = await response.json();
 
     // Process the fetched data and add drinks to the array
