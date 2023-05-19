@@ -13,7 +13,7 @@ import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js";
 import { innitUnconfirmedOrders } from "./pages/orderConfirmation/orderConfirmation.js";
 import { innitAllOrders } from "./pages/allOrders/allOrders.js";
 import { innitOrderReceiptChef } from "./pages/orderReceiptChef/orderReceiptChef.js";
-import { initMenu } from "./pages/shoppingCart.js";
+import { initMenu } from "./pages/menu/shoppingCart.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
 import { innitOrder as initOrder } from "./pages/order/order.js";
 import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js";
@@ -24,7 +24,7 @@ import { initEditPizzaPrice } from "./pages/editPizzaPrice/editPizzaPrice.js";
 let templates = {};
 
 window.addEventListener("load", async () => {
-  templates.templateMenu = await loadTemplate("./pages/menu.html");
+  templates.templateMenu = await loadTemplate("./pages/menu/menu.html");
   templates.templateAbout = await loadTemplate(
     "./pages/aboutPage/aboutPage.html"
   );

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <title>Bestil Fast Food</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/styles/placeOrder.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h2>Bestil Fast Food</h2>
+        <form id="userForm" onsubmit="saveUserInformation(event)">
+            <div class="mb-3">
+                <label for="name" class="form-label">Navn:</label>
+                <input type="text" id="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="surname" class="form-label">Efternavn:</label>
+                <input type="text" id="surname" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Telefonnummer:</label>
+                <input type="tel" id="phone" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Adresse:</label>
+                <input type="text" id="address" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="payment" class="form-label">Betalingsoplysninger:</label>
+                <input type="text" id="payment" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Bestilling</button>
+        </form>
+    </div>
+
+    <script src="placeOrder.js"></script>
+</body>
+</html>
