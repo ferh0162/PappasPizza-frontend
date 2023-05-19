@@ -2,26 +2,27 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
 
-    <link rel="stylesheet" href="styles/meny-styles-non-responsive.css" />
-    <link rel="stylesheet" href="styles/pizza-management.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/meny-styles-non-responsive.css" />
+  <link rel="stylesheet" href="styles/pizza-management.css" />
+  <link rel="stylesheet" href="styles/editPizzas.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 
-    <title>Pappas Pizza</title>
+  <title>Pappas Pizza</title>
 </head>
 
 <body>
 
-    
+
   <div id="topnav">
-    <nav  id="menu" class="menu-horizontal">
+    <nav id="menu" class="menu-horizontal">
       <ul id="nav-items-left" class="nav-items-left">
         <li>
           <a href="/" data-navigo>Home</a>
@@ -35,6 +36,16 @@
         <!-- HUSK AT TESTE OM HVORDAN DU KAN TILFØJE HTML TIL UL, SIDEN AT UL ER SOM EN LISTE.-->
         <li id="about-id" style="display:none">
           <a href="/about" data-navigo>Om os</a>
+        </li>
+        </li>
+        <li id="ingredients-id" style="display:none">
+          <a href="/ingredients" data-navigo>Ingredienser</a>
+        </li>
+        <li id="create-pizza-id" style="display:none">
+          <a href="/lavPizza" data-navigo>Lav en pizza</a>
+        </li>
+        <li id="rediger-pizza-priser-id" style="display:none">
+          <a href="/redigerPizzaPriser" data-navigo>Ændre pizza priser</a>
         </li>
       </ul>
       <div class="logo-container">
@@ -51,34 +62,26 @@
         </li>
         <li id="recepter-id" style="display: none;">
           <a href="/recepter" data-navigo>Recepter</a>
-        </li>        
+        </li>
         <li id="signIn-id">
           <a href="/signIn" data-navigo>Tilmeld</a>
         </li>
-        <li id="addPizza-id" style="display: none;">
-          <a href="/addPizza" data-navigo>Tilføj Pizza</a>
-        </li>  
         <li id="login-id">
           <a href="/login" data-navigo>Login</a>
         </li>
         <li id="logout-id" style="display:none">
           <a href="/logout" data-navigo>Logout</a>
-        </li>
-          <li id="ingredients-id">
-              <a href="/ingredients" data-navigo>Ingredienser</a>
-          </li>
-        <li id="pizza-management-id">
-          <a href="/pizzaBehandling" data-navigo>Pizza Behandling</a>
-        </li>
+
       </ul>
     </nav>
+    <p id="error"></p>
     <div id="content" style="margin:15px;"></div>
   </div>
 
-  <p id="error">Error Message Here</p>
-  
-            <script src="index.js" type="module"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
-              </script>
-          </body>
-          </html>
+
+  <script src="index.js" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+</body>
+
+</html>
