@@ -15,7 +15,7 @@ import{LOCAL_API as URL} from "./settings.js"
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initReceipts } from "./pages/recepter/recepter.js";
 import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js";
-import { innitUnconfirmedOrders } from "./pages/orderConfirmation/orderConfirmation.js";
+import { innitUnconfirmedOrders, initConfirmed } from "./pages/orderConfirmation/orderConfirmation.js";
 import { innitAllOrders } from "./pages/allOrders/allOrders.js";
 import { innitOrderReceiptChef } from "./pages/orderReceiptChef/orderReceiptChef.js";
 import { initMenu } from "./pages/menu/shoppingCart.js";
@@ -248,8 +248,8 @@ export async function roleHandler() {
       window.router.on({
         "/unconfirmed-orders": () => {
           renderTemplate(templates.templateUnconfirmedOrders, "content");
-          innitUnconfirmedOrders();
-        },
+        initConfirmed()
+              },
       });
 
       window.router.on({

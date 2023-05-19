@@ -112,7 +112,7 @@ export function sanitizeStringWithTableRows(tableRows) {
     }
   
     if(addToken && localStorage.getItem("token")){
-      opts.headers.Authorization = "Bearer " + localStorage.getItem("Token");
+      opts.headers.Authorization = "Bearer " + localStorage.getItem("token");
     }
   
     return opts;

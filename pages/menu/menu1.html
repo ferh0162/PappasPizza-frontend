@@ -1,0 +1,75 @@
+<template>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles/menu.css">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-8">
+            <h2 class="mb-4">Menu</h2>
+            <div class="menu-section">
+              <h3>Pizzas</h3>
+              <div class="row pizza-list" id="pizza-list"></div>
+            </div>
+            <div class="menu-section">
+              <h3>Drinks</h3>
+              <div class="row drinks-list" id="drinks-list"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card cart">
+              <div class="card-header">
+                <h2>Kurv</h2>
+              </div>
+              <div class="card-body">
+                <ul class="list-unstyled" id="cart-items"></ul>
+              </div>
+              <div class="card-footer">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="deliveryOptions" id="pickup" value="pickup" checked>
+                  <label class="form-check-label" for="pickup">Afhentning</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="deliveryOptions" id="delivery" value="delivery">
+                  <label class="form-check-label" for="delivery">Levering (+50 kr)</label>
+                </div>
+                <p>Total: <span id="cart-total">0</span> kr.</p>
+                <button class="btn btn-custom" id="order-button" href="/order" data-navigo>Bestil</button>
+                <button class="btn btn-secondary" id="clear-cart-button">Ryd kurv</button>
+              </div>
+            </div>
+      
+            <div class="card weather">
+              <div class="card-header">
+                <h4>Vejr</h4>
+              </div>
+              <div class="weather-card-body">
+                <div id="weather-info">
+                  <p id="address-id">Adresse: Vigerslev Allé 122, 2500 København</p>
+                  <p id="weatherTemp-id"></p>
+                  <img id="weatherStatus-id" src="" alt="Weather Icon">
+                </div>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+    </div>
+<div id="ingredient-modal" class="modal">
+  <div class="modal-content">
+    <span id="close-ingredient-modal" class="close">&times;</span>
+    <h2>Choose Ingredients</h2>
+    <div id="ingredient-list"></div>
+    <button id="add-to-cart-modal" class="btn btn-custom">Add to Cart</button>
+  </div>
+</div>
+
+      
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</body>
+</template>
