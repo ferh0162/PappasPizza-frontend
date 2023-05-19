@@ -1,7 +1,7 @@
 import { handleHttpErrors, makeOptions} from "../../utils.js";
 import { REMOTE_API as URL } from "../../settings.js";
 
-export function initPizzaManagement() {
+export function initMakeAPizza() {
   document.getElementById("btn-add-pizza-modal").onclick = showPizzaModal;
   document.getElementById("btn-modal-submit-pizza").onclick = addPizza;
 

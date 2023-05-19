@@ -14,26 +14,24 @@ import{LOCAL_API as URL} from "./settings.js"
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initReceipts } from "./pages/recepter/recepter.js";
-
 import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js";
 import { innitUnconfirmedOrders } from "./pages/orderConfirmation/orderConfirmation.js";
 import { innitAllOrders } from "./pages/allOrders/allOrders.js";
 import { innitOrderReceiptChef } from "./pages/orderReceiptChef/orderReceiptChef.js";
-import { initMenu } from "./pages/shoppingCart.js";
+import { initMenu } from "./pages/menu/shoppingCart.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
 import { innitOrder as initOrder } from "./pages/order/order.js";
 import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js";
 import { initIngredients } from "./pages/ingredients/ingredients.js";
-import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js";
+import { initMakeAPizza } from "./pages/makeAPizza/makeAPizza.js";
+import { initEditPizzaPrice } from "./pages/editPizzaPrice/editPizzaPrice.js";
 
 let templates = {};
 
 
 
 window.addEventListener("load", async () => {
-
-
-  templates.templateMenu = await loadTemplate("./pages/menu.html");
+  templates.templateMenu = await loadTemplate("./pages/menu/menu.html");
   templates.templateAbout = await loadTemplate(
     "./pages/aboutPage/aboutPage.html"
   );
@@ -62,8 +60,11 @@ window.addEventListener("load", async () => {
   templates.templateIngredient = await loadTemplate(
     "./pages/ingredients/ingredients.html"
   );
-  templates.templatePizzaManagement = await loadTemplate(
-    "./pages/pizzaManagement/pizzaManagement.html"
+  templates.templateMakeAPizza = await loadTemplate(
+    "./pages/makeAPizza/makeAPizza.html"
+  );
+  templates.templateEditPizzaPrice = await loadTemplate(
+    "./pages/editPizzaPrice/editPizzaPrice.html"
   );
 
   adjustForMissingHash();
@@ -106,8 +107,8 @@ async function routeHandler() {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
       },
-      //"/test": () => renderTemplate(templates.templateTest, "content")
     });
+
   await roleHandler();
   console.log("rolehandler done")
   router
@@ -222,11 +223,11 @@ export async function roleHandler() {
         },
       });
 
-      document.getElementById("pizza-management-id").style.display = "block";
+      document.getElementById("create-pizza-id").style.display = "block";
       window.router.on({
-        "/pizzaBehandling": () => {
-          renderTemplate(templates.templatePizzaManagement, "content");
-          initPizzaManagement();
+        "/lavPizza": () => {
+          renderTemplate(templates.templateMakeAPizza, "content");
+          initMakeAPizza();
         },
       });
 
@@ -257,6 +258,14 @@ export async function roleHandler() {
           innitOrderReceiptChef();
         },
       });
+      
+      document.getElementById("rediger-pizza-priser-id").style.display = "block";
+      window.router.on({
+        "/redigerPizzaPriser": () => {
+          renderTemplate(templates.templateEditPizzaPrice, "content");
+          initEditPizzaPrice();
+        },
+      })
 
       //Removes recepter
       document.getElementById("recepter-id").style.display = "none";
@@ -308,16 +317,15 @@ export async function roleHandler() {
     document.getElementById("ingredients-id").style.display = "none";
     window.router.off("/ingredients");
 
-
-    
-    //Removes pizza management
-    document.getElementById("pizza-management-id").style.display = "none";
-    window.router.off("/pizzaBehandling");
-
+    document.getElementById("create-pizza-id").style.display = "none";
+    window.router.off("/lavPizza");
 
     //Removes recepter
     document.getElementById("recepter-id").style.display = "none";
     window.router.off("/recepter");
+
+    document.getElementById("rediger-pizza-priser-id").style.display = "none";
+    window.router.off("/redigerPizzaPriser");
 
 
     //Removes chatGpt ordering
@@ -338,7 +346,7 @@ export async function roleHandler() {
     });
 
 
-
+    document.getElementById("signIn-id").style.display = "block";
     window.router.on({
       "/signIn": () => {
         renderTemplate(templates.templateSignIn, "content");
