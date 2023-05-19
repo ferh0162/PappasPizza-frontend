@@ -1,37 +1,46 @@
+// Declare empty arrays to store pizzas, drinks, ingredients, and the shopping cart
 const pizzas = [];
 const drinks = [];
 const ingredients = [];
 let cart = [];
 
+// Initialize the menu
 export async function initMenu() {
+  // Fetch pizzas, drinks, and ingredients from the server asynchronously
   await fetchPizza();
   await fetchDrink();
   await fetchIngredients();
 
+  // Display the pizzas and drinks in the HTML document
   displayItems(pizzas, "pizza-list", "pizza-item");
   displayItems(drinks, "drinks-list", "drink-item");
 
+  // Load the cart from local storage if it exists
   const storedCart = localStorage.getItem("cart");
   if (storedCart) {
     cart = JSON.parse(storedCart);
     updateCart();
   }
 
+  // Add event listener to the "Clear Cart" button
   document.getElementById("clear-cart-button").addEventListener("click", () => {
     cart = [];
     updateCart();
   });
 
+  // Add event listeners to the delivery options
   for (const option of document.getElementsByName("deliveryOptions")) {
     option.addEventListener("change", updateCart);
   }
 }
 
+// Fetch pizzas from the server
 async function fetchPizza() {
   try {
     const response = await fetch("http://localhost:8080/api/pizzas");
     const data = await response.json();
 
+    // Process the fetched data and add pizzas to the array
     data.forEach((pizza) => {
       const ingredients = pizza.ingredients.map((ingredient) => ({
         id: ingredient.id,
@@ -51,11 +60,13 @@ async function fetchPizza() {
   }
 }
 
+// Fetch drinks from the server
 async function fetchDrink() {
   try {
     const response = await fetch("http://localhost:8080/api/drinks");
     const data = await response.json();
 
+    // Process the fetched data and add drinks to the array
     data.forEach((drink) => {
       drinks.push({
         id: drink.id,
@@ -69,12 +80,15 @@ async function fetchDrink() {
   }
 }
 
+// Fetch ingredients from the server
 async function fetchIngredients() {
+  // Only fetch ingredients if the array is empty
   if (ingredients.length === 0) {
     try {
       const response = await fetch("http://localhost:8080/api/ingredients");
       const data = await response.json();
 
+      // Process the fetched data and add ingredients to the array
       data.forEach((ingredient) => {
         ingredients.push({
           id: ingredient.id,
@@ -88,6 +102,7 @@ async function fetchIngredients() {
   }
 }
 
+// Display items in the HTML document
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
 
@@ -97,9 +112,11 @@ function displayItems(items, containerId, itemClass) {
     let additionalInfo = "";
 
     if (itemClass === "pizza-item") {
+      // For pizzas, generate additional ingredient information
       const ingredientNames = item.ingredients.map((ingredient) => ingredient.name).join(", ");
       additionalInfo = `<p class="card-text additional-info">${ingredientNames}</p>`;
 
+      // Generate HTML structure for pizzas
       div.innerHTML = `
         <div class="card">
           <div class="card-body">
@@ -110,6 +127,7 @@ function displayItems(items, containerId, itemClass) {
           </div>
         </div>`;
     } else if (itemClass === "drink-item") {
+      // Generate HTML structure for drinks
       div.innerHTML = `
         <div class="card">
           <div class="card-body">
@@ -121,10 +139,13 @@ function displayItems(items, containerId, itemClass) {
         </div>`;
     }
 
+    // Add event listener to the "Add to cart" button
     div.querySelector(".addToCart").addEventListener("click", () => {
       if (itemClass === "pizza-item") {
+        // If a pizza is clicked, open the ingredient modal
         openIngredientModal(item.id);
       } else {
+        // Otherwise, directly add the drink to the cart
         addToCart(item.id, true);
       }
     });
@@ -133,8 +154,7 @@ function displayItems(items, containerId, itemClass) {
   }
 }
 
-
-
+// Add an item to the cart
 function addToCart(itemId, isDrink = false) {
   const item = isDrink ? drinks.find((d) => d.id === itemId) : pizzas.find((p) => p.id === itemId);
   if (!item) return;
@@ -157,14 +177,17 @@ function addToCart(itemId, isDrink = false) {
   );
 
   if (index === -1) {
+    // If the item is not in the cart, add a new entry
     cart.push({ ...item, quantity: 1, isDrink: isDrink, added: extras });
   } else {
+    // Otherwise, update the quantity of the existing entry
     cart[index].quantity += 1;
   }
 
   updateCart();
 }
 
+// Remove an item from the cart
 function removeFromCart(itemId, isDrink = false, extras = []) {
   // Check if the item with the same id and extras exists in the cart
   const index = cart.findIndex((cartItem) => 
@@ -174,6 +197,7 @@ function removeFromCart(itemId, isDrink = false, extras = []) {
   );
 
   if (index !== -1) {
+    // Update the quantity or remove the item from the cart
     cart[index].quantity -= 1;
     if (cart[index].quantity === 0) {
       cart.splice(index, 1);
@@ -182,7 +206,7 @@ function removeFromCart(itemId, isDrink = false, extras = []) {
   }
 }
 
-
+// Update the cart display
 function updateCart() {
   const cartItems = document.getElementById("cart-items");
   cartItems.innerHTML = "";
@@ -224,19 +248,25 @@ function updateCart() {
     }
   }
 
+  // Add delivery fee if selected
   if (document.getElementById("delivery").checked) {
     total += 50;
   }
 
+  // Update the total price in the HTML document
   document.getElementById("cart-total").innerText = total.toFixed(2);
+
+  // Store the cart in local storage
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// Open the ingredient modal for selecting additional ingredients
 function openIngredientModal(pizzaId) {
   const modal = document.getElementById("ingredient-modal");
   const ingredientList = document.getElementById("ingredient-list");
   ingredientList.innerHTML = '';
 
+  // Iterate through the ingredients and create checkboxes
   for (let i = 0; i < ingredients.length; i++) {
     const ingredient = ingredients[i];
     const checkbox = document.createElement("input");
@@ -257,6 +287,7 @@ function openIngredientModal(pizzaId) {
     ingredientList.appendChild(ingredientItem);
   }
 
+  // Event listeners for the modal buttons
   document.getElementById("add-to-cart-modal").onclick = () => {
     addToCart(pizzaId);
     modal.style.display = "none";
@@ -268,5 +299,3 @@ function openIngredientModal(pizzaId) {
 
   modal.style.display = "block";
 }
-
-

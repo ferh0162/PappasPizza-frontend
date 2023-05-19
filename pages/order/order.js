@@ -1,14 +1,16 @@
+// Initialize the order process
 export function innitOrder() {
+    // Display cart items and add event listener to the user form submission
     console.log("Hello from Order");
     displayCartItems();
     document.getElementById('userForm').addEventListener('submit', saveUserInformation);
-
-    
- 
 }
 
 
+
+// Display cart items
 function displayCartItems() {
+    // Retrieve the cart from local storage
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
         const cart = JSON.parse(storedCart);
@@ -16,6 +18,7 @@ function displayCartItems() {
         cartItems.innerHTML = "";
         let total = 0;
         
+        // Iterate through each item in the cart and generate HTML elements for display
         for (const item of cart) {
             const li = document.createElement("li");
             li.className = "cart-item";
@@ -25,6 +28,7 @@ function displayCartItems() {
             const addedList = item.added ? item.added.map(ingredient => `+${ingredient.name}`).join('<br>') : '';
             const addedPrice = item.added ? item.added.reduce((total, ingredient) => total + ingredient.price, 0) : 0;
 
+            // Generate HTML structure for each cart item
             li.innerHTML = `
                 <div class="item-id">${itemDetails}</div>
                 <div class="item-name">${item.name}</div>
@@ -33,6 +37,7 @@ function displayCartItems() {
                 <div class="item-quantity">x${item.quantity}</div>
             `;
     
+            // Append the cart item to the cart items container
             cartItems.appendChild(li);
             total += (item.price + addedPrice) * item.quantity;
         }
@@ -42,6 +47,7 @@ function displayCartItems() {
             total += 50;
         }
   
+        // Update the total price in the HTML document
         document.getElementById("cart-total").innerText = total.toFixed(2);
     }
 }
@@ -51,6 +57,7 @@ function displayCartItems() {
 
 
 
+// Save user information
 function saveUserInformation(event) {
     event.preventDefault();
 
@@ -107,6 +114,7 @@ function saveUserInformation(event) {
             status: 'FRESH' // assuming order status is fresh on submission
         };
 
+        // Send the order request to the server
         fetch("http://localhost:8080/api/orders/addOrder", {
             method: "POST",
             headers: {
@@ -114,6 +122,7 @@ function saveUserInformation(event) {
             },
             body: JSON.stringify(orderRequest)
         }).then(response => response.json()).then(data => {
+            // Handle the response from the server
             console.log("Order response", data);
             localStorage.removeItem('cart'); // Clear the cart
         
@@ -159,11 +168,11 @@ function saveUserInformation(event) {
             // Insert the confirmation details into the 'confirmation' div and display it
             confirmation.innerHTML = confirmationDetails;
             confirmation.style.display = 'block';
+
+            // Remove the existing html fra user informationer
             document.getElementById("user-header").style.display = "none";
         }).catch(error => {
             console.error("Error:", error);
         });
-        
-        
     }
 }
