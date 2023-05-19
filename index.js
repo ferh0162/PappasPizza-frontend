@@ -29,24 +29,10 @@ import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js"
 
 let templates = {};
 
-async function initWeatherStatus(){
 
-  const weatherData = await fetch(URL+"/weather").then(handleHttpErrors)
-
-  const icon = weatherData.icon;
-
-  document.getElementById("address-id").innerHTML=
-  `Adresse: Vigerslev Allé 122, 2500 København <br>
-  Tlf: 50 16 26 50`
-
-  document.getElementById("weatherTemp-id").innerHTML=((weatherData.temperature - 273.15).toFixed(1)) + " °C"
-
-  document.getElementById("weatherStatus-id").src=`https://openweathermap.org/img/wn/${icon}@2x.png`
-}
 
 window.addEventListener("load", async () => {
 
-  await initWeatherStatus();
 
   templates.templateMenu = await loadTemplate("./pages/menu.html");
   templates.templateAbout = await loadTemplate(
@@ -322,8 +308,6 @@ export async function roleHandler() {
     document.getElementById("logout-id").style.display = "none";
     window.router.off("/logout");
 
-    //Adds sidebar
-    document.getElementById("sidebar-id").style.display = "block"
 
     //Adds order
     window.router.on({
