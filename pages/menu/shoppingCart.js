@@ -1,3 +1,4 @@
+
 import { LOCAL_API as URL } from "../../settings.js";
 import {
   handleHttpErrors,
@@ -89,7 +90,7 @@ async function fetchPizza() {
 
 async function fetchDrink() {
   try {
-    const response = await fetch( URL + "/drinks");
+    const response = await fetch(URL +"/drinks");
     const data = await response.json();
 
     data.forEach((drink) => {
