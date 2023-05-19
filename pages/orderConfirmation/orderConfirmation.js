@@ -2,7 +2,7 @@ const orderRequest = [];
 
 
 function displayOrderInfo() {
-  console.log("hi")
+  console.log("displaying order info.")
   const orderInfo = document.getElementById("order-info");
   
   let orderData = '';
