@@ -16,7 +16,8 @@
 .ingredient-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
     max-height: 30vh; 
     min-height: 30vh; 
     overflow-y: auto;
