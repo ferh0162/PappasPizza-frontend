@@ -1,0 +1,40 @@
+<template>
+
+    <div style="margin-left:10%;margin-right: 10%;">
+  
+  
+        <div style="max-width:700px;">
+          <div class="row">
+            <div class="col-md-4">
+              <h1>Login</h1>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 2em;">
+            <div class="col-md-2">
+              <label for="username"><b>Username</b></label>
+            </div>
+            <div class="col-md-8">
+              <input type="text" placeholder="Enter Username" id="username" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="password"><b>Password</b></label>
+            </div>
+            <div class="col-md-8">
+              <input type="password" placeholder="Enter Password" id="password" required>
+            </div>
+          </div>
+          <div class="row" style="margin-top:2em">
+            <div class="col-md-3 d-flex align-items-center">
+              <button id="login-btn" style="width:100%" class="btn btn-dark car-zero-margin">Login</button>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+              <span class="car-zero-margin">Not yet a member
+                <a href="/signIn" data-navigo>Sign Up</a> </span>
+            </div>
+          </div>
+        </div>
+     <p id="error" style="color:red"></p>
+    </div>
+  </template>
