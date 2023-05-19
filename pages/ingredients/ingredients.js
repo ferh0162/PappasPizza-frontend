@@ -1,3 +1,4 @@
+console.log("loading order")
 import { REMOTE_API as URL } from "../../settings.js";
 
 

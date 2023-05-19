@@ -11,7 +11,6 @@
 
     <link rel="stylesheet" href="styles/meny-styles-non-responsive.css" />
     <link rel="stylesheet" href="styles/pizza-management.css" />
-    <link rel="stylesheet" href="styles/statusBar.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
 
@@ -24,8 +23,8 @@
   <div id="topnav">
     <nav  id="menu" class="menu-horizontal">
       <ul id="nav-items-left" class="nav-items-left">
-        <li>
-          <a href="/" data-navigo>Home</a>
+        <li id="menu-id">
+          <a href="/menu" data-navigo>Menu</a>
         </li>
         <li id="unconfirmed-orders-id" style="display:none">
           <a href="/unconfirmed-orders" data-navigo>Ubekræftede ordre</a>
@@ -39,14 +38,11 @@
         </li>
       </ul>
       <div class="logo-container">
-        <a href="#">
+        <a id="center-id" href="/menu" data-navigo>
           <img src="pictures/pizzalogo.png" alt="PappasPizza" class="logo">
         </a>
       </div>
       <ul class="nav-items-right">
-        <li id="menu-id">
-          <a href="/menu" data-navigo>Menu</a>
-        </li>
         <li id="chatGpt-id" style="display: none;">
           <a href="/chatGpt" data-navigo>AI-Pizza</a>
         </li>

@@ -7,8 +7,6 @@ const pizzas = [];
 const drinks = [];
 let cart = [];
 export async function initMenu() {
-
-  console.log("You are now in ANONYMOUS /Menu")
   
   await fetchPizza();
   await fetchDrink();
