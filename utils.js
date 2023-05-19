@@ -1,3 +1,4 @@
+console.log("loading utils!")
 /**
  * Appends the provided template to the node with the id contentId
  * @param {*} templ The HTML-Template to render

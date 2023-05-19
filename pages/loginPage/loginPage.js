@@ -1,4 +1,4 @@
-import {LOCAL_API_URL as API_URL} from "../../settings.js"
+import {REMOTE_API as API_URL} from "../../settings.js"
 import {handleHttpErrors} from "../../utils.js"
 import { roleHandler } from "../../index.js"
 
