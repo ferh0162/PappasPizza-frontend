@@ -1,0 +1,4 @@
+.scrollable-menu {
+    max-height: 75vh; /* Adjust the height as needed */
+    overflow-y: auto;
+  }

@@ -9,7 +9,6 @@ import {
 
 import { testEverything } from "./pages/aboutPage/aboutPage.js";
 import { initReceipts } from "./pages/recepter/recepter.js";
-
 import { initLogin, logout, checkAdmin } from "./pages/loginPage/loginPage.js";
 import { innitUnconfirmedOrders } from "./pages/orderConfirmation/orderConfirmation.js";
 import { innitAllOrders } from "./pages/allOrders/allOrders.js";
@@ -18,11 +17,10 @@ import { initMenu } from "./pages/shoppingCart.js";
 import { initSignIn } from "./pages/signInPage/signInPage.js";
 import { innitOrder as initOrder } from "./pages/order/order.js";
 import { innitChatGpt } from "./pages/chatGPTPage/chatGPTPage.js";
-import { initAddPizza } from "./pages/addPizzasPage/addPizzasPage.js";
 import { initIngredients } from "./pages/ingredients/ingredients.js";
-import { initPizzaManagement } from "./pages/pizzaManagement/pizzaManagement.js";
+import { initMakeAPizza } from "./pages/makeAPizza/makeAPizza.js";
+import { initEditPizzaPrice } from "./pages/editPizzaPrice/editPizzaPrice.js";
 
-import { initEditPizza } from "./pages/pizzaEditing/pizzaEditing.js"
 let templates = {};
 
 window.addEventListener("load", async () => {
@@ -52,17 +50,15 @@ window.addEventListener("load", async () => {
   templates.templateChatGpt = await loadTemplate(
     "./pages/chatGPTPage/chatGPTPage.html"
   );
-  templates.templateAddPizzas = await loadTemplate(
-    "./pages/addPizzasPage/addPizzasPage.html"
-  );
   templates.templateIngredient = await loadTemplate(
     "./pages/ingredients/ingredients.html"
   );
-  templates.templatePizzaManagement = await loadTemplate(
-    "./pages/pizzaManagement/pizzaManagement.html"
+  templates.templateMakeAPizza = await loadTemplate(
+    "./pages/makeAPizza/makeAPizza.html"
   );
-  templates.templateEditPizza = await loadTemplate("./pages/pizzaEditing/pizzaEditing.html")
-
+  templates.templateEditPizzaPrice = await loadTemplate(
+    "./pages/editPizzaPrice/editPizzaPrice.html"
+  );
 
   adjustForMissingHash();
 
@@ -110,12 +106,8 @@ async function routeHandler() {
         renderTemplate(templates.templateLogin, "content");
         initLogin();
       },
-      "/redigerePizzaer" : () => {
-        renderTemplate(templateEditPizza, "content")
-        initEditPizza()
-      }
-      //"/test": () => renderTemplate(templates.templateTest, "content")
     });
+
   await roleHandler();
   router
     .notFound(() => {
@@ -184,10 +176,6 @@ export async function roleHandler() {
       document.getElementById("recepter-id").style.display = "none";
       window.router.off("/recepter");
 
-      //Removes add pizza
-      document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-      window.router.off("/addPizza");
-
       //Adds about us
       document.getElementById("about-id").style.display = "block";
       window.router.on({
@@ -215,15 +203,6 @@ export async function roleHandler() {
 
             */
 
-      //Adds Add Pizza
-      document.getElementById("addPizza-id").style.display = "block"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-      window.router.on({
-        "/addPizza": () => {
-          renderTemplate(templates.templateAddPizzas, "content");
-          initAddPizza(); //<-- Remember to run your innit JS after the template render.
-        },
-      });
-
       document.getElementById("ingredients-id").style.display = "block";
       window.router.on({
         "/ingredients": () => {
@@ -232,11 +211,11 @@ export async function roleHandler() {
         },
       });
 
-      document.getElementById("pizza-management-id").style.display = "block";
+      document.getElementById("create-pizza-id").style.display = "block";
       window.router.on({
-        "/pizzaBehandling": () => {
-          renderTemplate(templates.templatePizzaManagement, "content");
-          initPizzaManagement();
+        "/lavPizza": () => {
+          renderTemplate(templates.templateMakeAPizza, "content");
+          initMakeAPizza();
         },
       });
 
@@ -267,6 +246,14 @@ export async function roleHandler() {
           innitOrderReceiptChef();
         },
       });
+      
+      document.getElementById("rediger-pizza-priser-id").style.display = "block";
+      window.router.on({
+        "/redigerPizzaPriser": () => {
+          renderTemplate(templates.templateEditPizzaPrice, "content");
+          initEditPizzaPrice();
+        },
+      })
 
       //Removes recepter
       document.getElementById("recepter-id").style.display = "none";
@@ -297,6 +284,7 @@ export async function roleHandler() {
     document.getElementById("logout-id").style.display = "none";
     window.router.off("/logout");
 
+
     //Adds order
     window.router.on({
       "/order": () => {
@@ -307,17 +295,17 @@ export async function roleHandler() {
 
     document.getElementById("ingredients-id").style.display = "none";
     window.router.off("/ingredients");
-    
-    document.getElementById("pizza-management-id").style.display = "none";
-    window.router.off("/pizzaBehandling");
 
-    //Removes add pizza
-    document.getElementById("addPizza-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
-    window.router.off("/addPizza");
+    document.getElementById("create-pizza-id").style.display = "none";
+    window.router.off("/lavPizza");
 
     //Removes recepter
     document.getElementById("recepter-id").style.display = "none";
     window.router.off("/recepter");
+
+    document.getElementById("rediger-pizza-priser-id").style.display = "none";
+    window.router.off("/redigerPizzaPriser");
+
 
     //Removes chatGpt ordering
     document.getElementById("chatGpt-id").style.display = "none"; //ONLY IF THE ELEMENT EXISTS ON THE HEADER
@@ -332,6 +320,8 @@ export async function roleHandler() {
       },
     });
 
+
+    document.getElementById("signIn-id").style.display = "block";
     window.router.on({
       "/signIn": () => {
         renderTemplate(templates.templateSignIn, "content");
