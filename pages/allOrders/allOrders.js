@@ -1,16 +1,15 @@
 import {REMOTE_API as API_URL} from "../../settings.js" 
+import { handleHttpErrors, makeOptions } from "../../utils.js";
+
 
 export async function innitAllOrders() {
-  const URL = API_URL + "/orders";
-  
-  try {
-    const response = await fetch(URL);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
 
-    const orders = await response.json();
+  const URL = API_URL + "/orders";
+  const options = makeOptions("GET", "", true)
+  try {
+    const orders = await fetch(URL, options).then(handleHttpErrors);
+
+    console.log(orders)
     const container = document.querySelector(".container");
     orders.forEach((order) => {
       const receipt = document.createElement("div");

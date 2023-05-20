@@ -1,4 +1,32 @@
+import { makeOptions } from "../../utils.js";
+import { REMOTE_API as URL } from "../../settings.js";
+
 const orderRequest = [];
+
+export async function initConfirmed() {
+  // Fetch and display unconfirmed orders upon initialization
+  await innitUnconfirmedOrders();
+
+// Event listener for pickup time buttons
+const pickupTimeButtons = document.getElementsByClassName('pickup-time');
+for(let i = 0; i < pickupTimeButtons.length; i++) {
+  pickupTimeButtons[i].addEventListener('click', function() {
+    const minutes = parseInt(pickupTimeButtons[i].dataset.minutes);
+    setPickupTime(minutes, pickupTimeButtons[i]);
+  });
+}
+
+// Event listener for 'Confirm Order' button
+const confirmButton = document.getElementById('confirm-order-button');
+confirmButton.addEventListener('click', confirmOrder);
+
+
+  // Event listener for 'Refuse Order' button
+  const refuseButton = document.getElementById('refuse-order-button'); // Assuming the ID of the button is 'refuse-order-button'
+  refuseButton.addEventListener('click', function() {
+    refuseOrder();
+  });
+}
 
 
 function displayOrderInfo() {
@@ -52,36 +80,21 @@ function setPickupTime(minutes, button) {
   console.log(`Pickup time set for ${pickupTimeString}`);
 }
   
-//Old name fetchOrders
-export async function innitUnconfirmedOrders() {
-  try {
-    const response = await fetch('http://localhost:8080/api/orders/viewNonConfirmed');
-    const data = await response.json();
-
-    orderRequest.length = 0; // Clear the existing orders
-    if (data.length !== 0) { // Check if the fetched data is not empty
-      orderRequest.push(...data); // Push the new orders
-      displayOrderInfo(); // Refresh the displayed order info
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
 function confirmOrder() {
+  // Ensure there's an order to confirm
+  if (orderRequest.length === 0) {
+    console.log('No order to confirm');
+    return;
+  }
+
+  const options = makeOptions("PATCH", orderRequest[0], true)
   const orderId = orderRequest[0].id;
   orderRequest[0].confirmed = true;
   orderRequest[0].status = "CONFIRMED";
   console.log("Order confirmed", orderRequest[0]);
-  
+
   // Send order as a PATCH request
-  fetch(`http://localhost:8080/api/orders/confirm/${orderId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(orderRequest[0])
-  })
+  fetch(URL + `/orders/confirm/${orderId}`, options)
   .then(response => {
     // Check if the response has any content
     if (response.status === 204 || response.headers.get('content-length') === '0') {
@@ -94,16 +107,46 @@ function confirmOrder() {
     if (data) {
       console.log(data);
     }
-    fetchOrders(); // Fetch the orders again after the order is confirmed
+    // Fetch the next unconfirmed order
+    innitUnconfirmedOrders();
   })
   .catch((error) => {
     console.error('Error:', error);
   });
 }
+
+export async function innitUnconfirmedOrders() {
+  const options = makeOptions("GET", '', true)
+  console.log("in unconfirmed");
+
+  try {
+    const response = await fetch(URL + '/orders/viewNonConfirmed', options);
+    const data = await response.json();
+    console.log("end unconfirmed");
+
+    orderRequest.length = 0; // Clear the existing orders
+    if (data.length !== 0) { // Check if the fetched data is not empty
+      orderRequest.push(...data); // Push the new orders
+
+      displayOrderInfo(); // Refresh the displayed order info
+    } else {
+      // No orders fetched, clear the display
+      const orderInfo = document.getElementById("order-info");
+      orderInfo.innerHTML = '';
+    }
+    console.log(data);
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
   
   function refuseOrder() {
   orderRequest[0].confirmed = false;
   orderRequest[0].status = "REFUSED";
   console.log("Order refused", orderRequest[0]);
+    // Fetch the next unconfirmed order
+    innitUnconfirmedOrders();
   }
   

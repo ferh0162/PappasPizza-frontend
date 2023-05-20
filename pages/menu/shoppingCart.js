@@ -1,44 +1,50 @@
-
-import { LOCAL_API as URL } from "../../settings.js";
+import { REMOTE_API as URL } from "../../settings.js";
 import {
   handleHttpErrors,
 } from "../../utils.js";
 
+// Declare empty arrays to store pizzas, drinks, ingredients, and the shopping cart
 const pizzas = [];
 const drinks = [];
+const ingredients = [];
 let cart = [];
+
+// Initialize the menu
 export async function initMenu() {
-  
+  // Fetch pizzas, drinks, and ingredients from the server asynchronously
   await fetchPizza();
   await fetchDrink();
+  await fetchIngredients();
 
+  // Display the pizzas and drinks in the HTML document
   displayItems(pizzas, "pizza-list", "pizza-item");
   displayItems(drinks, "drinks-list", "drink-item");
 
-  // Check if there is cart data stored in localStorage
+  console.log("pizza and drinks displayed")
+
+
+  // Load the cart from local storage if it exists
   const storedCart = localStorage.getItem("cart");
   if (storedCart) {
     cart = JSON.parse(storedCart);
     updateCart();
+    console.log("load cart")
+
   }
+  console.log("load from local storage")
 
-  // Add event listeners and populate the menu items
-const clearCartButton = document.getElementById("clear-cart-button");
-clearCartButton.addEventListener("click", () => {
-  cart = [];
-  updateCart();
-});
+  // Add event listener to the "Clear Cart" button
+  document.getElementById("clear-cart-button").addEventListener("click", () => {
+    cart = [];
+    updateCart();
+  });
 
-const deliveryOptions = document.getElementsByName("deliveryOptions");
-for (const option of deliveryOptions) {
-  option.addEventListener("change", updateCart);
+  // Add event listeners to the delivery options
+  for (const option of document.getElementsByName("deliveryOptions")) {
+    option.addEventListener("change", updateCart);
+  }
+  initWeatherStatus()
 }
-
-initWeatherStatus()
-
-}
-
-console.log("shoppingcart is loaded!")
 
 async function initWeatherStatus() {
   try {
@@ -61,11 +67,13 @@ async function initWeatherStatus() {
   }
 }
 
+// Fetch pizzas from the server
 async function fetchPizza() {
   try {
     const response = await fetch(URL + "/pizzas");
     const data = await response.json();
 
+    // Process the fetched data and add pizzas to the array
     data.forEach((pizza) => {
       const ingredients = pizza.ingredients.map((ingredient) => ({
         id: ingredient.id,
@@ -80,19 +88,20 @@ async function fetchPizza() {
         ingredients: ingredients,
       });
     });
+    console.log(data)
 
-    console.log(pizzas);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
-};
+}
 
-
+// Fetch drinks from the server
 async function fetchDrink() {
   try {
     const response = await fetch(URL +"/drinks");
     const data = await response.json();
 
+    // Process the fetched data and add drinks to the array
     data.forEach((drink) => {
       drinks.push({
         id: drink.id,
@@ -101,13 +110,38 @@ async function fetchDrink() {
         size: drink.size,
       });
     });
+    console.log(data)
 
-    console.log(drinks);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 }
 
+// Fetch ingredients from the server
+async function fetchIngredients() {
+  // Only fetch ingredients if the array is empty
+  if (ingredients.length === 0) {
+    try {
+      const response = await fetch("http://localhost:8080/api/ingredients");
+      const data = await response.json();
+
+      // Process the fetched data and add ingredients to the array
+      data.forEach((ingredient) => {
+        ingredients.push({
+          id: ingredient.id,
+          name: ingredient.name,
+          price: ingredient.price,
+        });
+      });
+      console.log(data)
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+}
+
+// Display items in the HTML document
 function displayItems(items, containerId, itemClass) {
   const container = document.getElementById(containerId);
 
@@ -117,55 +151,96 @@ function displayItems(items, containerId, itemClass) {
     let additionalInfo = "";
 
     if (itemClass === "pizza-item") {
+      // For pizzas, generate additional ingredient information
       const ingredientNames = item.ingredients.map((ingredient) => ingredient.name).join(", ");
       additionalInfo = `<p class="card-text additional-info">${ingredientNames}</p>`;
+
+      // Generate HTML structure for pizzas
+      div.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${item.id}. ${item.name}</h5>
+            <p class="card-text">${item.price} kr.</p>
+            ${additionalInfo}
+            <button class="btn btn-custom addToCart">Add to cart</button>
+          </div>
+        </div>`;
     } else if (itemClass === "drink-item") {
-      additionalInfo = `<p class="card-text additional-info">Size: ${item.size} </p>`;
+      // Generate HTML structure for drinks
+      div.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${item.name}</h5>
+            <p class="card-text">${item.size}</p>
+            <p class="card-text">${item.price} kr.</p>
+            <button class="btn btn-custom addToCart">Add to cart</button>
+          </div>
+        </div>`;
     }
 
-    div.innerHTML = `
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">${item.id}. ${item.name}</h5>
-          <p class="card-text">${item.price} kr.</p>
-          `+additionalInfo+`
-        </div>
-      </div>`;
+    // Add event listener to the "Add to cart" button
+    div.querySelector(".addToCart").addEventListener("click", () => {
+      if (itemClass === "pizza-item") {
+        // If a pizza is clicked, open the ingredient modal
+        openIngredientModal(item.id);
+      } else {
+        // Otherwise, directly add the drink to the cart
+        addToCart(item.id, true);
+      }
+    });
 
-    const button = document.createElement("button");
-    button.className = "btn btn-custom";
-    button.innerText = "Add to cart";
-    button.addEventListener("click", () => addToCart(item.id, itemClass === "drink-item"));
-
-    div.querySelector('.card .card-body').appendChild(button);
     container.appendChild(div);
   }
+  console.log("display items")
+
 }
 
-
+// Add an item to the cart
 function addToCart(itemId, isDrink = false) {
-  const item = isDrink
-    ? drinks.find((d) => d.id === itemId)
-    : pizzas.find((p) => p.id === itemId);
+  const item = isDrink ? drinks.find((d) => d.id === itemId) : pizzas.find((p) => p.id === itemId);
   if (!item) return;
 
-  const index = cart.findIndex(
-    (cartItem) => cartItem.id === item.id && cartItem.isDrink === isDrink
+  const extras = [];
+  const checkboxes = document.querySelectorAll(`input[name="extra-ingredients-${itemId}"]:checked`);
+  for (const checkbox of checkboxes) {
+    const ingredientId = parseInt(checkbox.value);
+    const ingredient = ingredients.find(ingredient => ingredient.id === ingredientId);
+    if (ingredient) {
+      extras.push(ingredient);
+    }
+  }
+
+  // Check if the item with the same id and extras already exists in the cart
+  const index = cart.findIndex((cartItem) => 
+    cartItem.id === item.id && 
+    cartItem.isDrink === isDrink &&
+    JSON.stringify(cartItem.added.sort()) === JSON.stringify(extras.sort())
   );
 
   if (index === -1) {
-    cart.push({ ...item, quantity: 1, isDrink: isDrink });
+    // If the item is not in the cart, add a new entry
+    cart.push({ ...item, quantity: 1, isDrink: isDrink, added: extras });
   } else {
+    // Otherwise, update the quantity of the existing entry
     cart[index].quantity += 1;
   }
+
+  console.log("add to cart")
+
   updateCart();
 }
 
-function removeFromCart(itemId, isDrink = false) {
-  const index = cart.findIndex(
-    (cartItem) => cartItem.id === itemId && cartItem.isDrink === isDrink
+// Remove an item from the cart
+function removeFromCart(itemId, isDrink = false, extras = []) {
+  // Check if the item with the same id and extras exists in the cart
+  const index = cart.findIndex((cartItem) => 
+    cartItem.id === itemId && 
+    cartItem.isDrink === isDrink &&
+    JSON.stringify(cartItem.added.sort()) === JSON.stringify(extras.sort())
   );
+
   if (index !== -1) {
+    // Update the quantity or remove the item from the cart
     cart[index].quantity -= 1;
     if (cart[index].quantity === 0) {
       cart.splice(index, 1);
@@ -174,48 +249,96 @@ function removeFromCart(itemId, isDrink = false) {
   }
 }
 
-function updateQuantity(itemId, newQuantity) {
-  const index = cart.findIndex((cartItem) => cartItem.id === itemId);
- 
-  if (index !== -1) {
-    cart[index].quantity = newQuantity;
-    updateCart();
+// Update the cart display
+function updateCart() {
+  const cartItems = document.getElementById("cart-items");
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  for (const item of cart) {
+    const li = document.createElement("li");
+    li.className = "cart-item";
+
+    const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
+
+    // Add list of added ingredients
+    const addedIngredients = item.added.map(ingredient => `+ ${ingredient.name}`).join("<br>");
+    const addedIngredientsHtml = addedIngredients ? `<div class="added-ingredients">${addedIngredients}</div>` : "";
+
+    li.innerHTML = `
+      <span class="item-id">${itemDetails}</span>
+      <div class="item-name-wrapper">
+        <span class="item-name">${item.name}</span>
+        ${addedIngredientsHtml}
+      </div>
+      <span class="item-price">${item.price} kr.</span>
+      <span class="item-quantity">x${item.quantity}</span>
+    `;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-btn";
+    removeBtn.innerText = "X";
+    removeBtn.addEventListener("click", () => removeFromCart(item.id, item.isDrink, item.added));
+
+    li.appendChild(removeBtn);
+    cartItems.appendChild(li);
+
+    total += item.price * item.quantity;
+
+    // Add cost of added ingredients
+    for (const added of item.added) {
+      total += added.price * item.quantity;
+    }
   }
+
+  // Add delivery fee if selected
+  if (document.getElementById("delivery").checked) {
+    total += 50;
+  }
+
+  // Update the total price in the HTML document
+  document.getElementById("cart-total").innerText = total.toFixed(2);
+
+  // Store the cart in local storage
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-  function updateCart() {
-    const cartItems = document.getElementById("cart-items");
-    cartItems.innerHTML = "";
-    let total = 0;
-    
-    for (const item of cart) {
-      const li = document.createElement("li");
-      li.className = "cart-item";
-  
-      const itemDetails = item.isDrink ? `${item.size}` : `${item.id}.`;
-  
-      li.innerHTML = `
-        <span class="item-id">${itemDetails}</span>
-        <span class="item-name">${item.name}</span>
-        <span class="item-price">${item.price} kr.</span>
-        <span class="item-quantity">x${item.quantity}</span>
-      `;
-  
-      const removeBtn = document.createElement("button");
-      removeBtn.className = "remove-btn";
-      removeBtn.innerText = "X";
-      removeBtn.addEventListener("click", () => removeFromCart(item.id, item.isDrink));
-  
-      li.appendChild(removeBtn);
-      cartItems.appendChild(li);
-  
-      total += item.price * item.quantity;
-    }
-  
-    if (document.getElementById("delivery").checked) {
-      total += 50;
-    }
-  
-    document.getElementById("cart-total").innerText = total.toFixed(2);
-    localStorage.setItem("cart", JSON.stringify(cart));
+// Open the ingredient modal for selecting additional ingredients
+function openIngredientModal(pizzaId) {
+  const modal = document.getElementById("ingredient-modal");
+  const ingredientList = document.getElementById("ingredient-list");
+  ingredientList.innerHTML = '';
+
+  // Iterate through the ingredients and create checkboxes
+  for (let i = 0; i < ingredients.length; i++) {
+    const ingredient = ingredients[i];
+    const checkbox = document.createElement("input");
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("value", ingredient.id);
+    checkbox.setAttribute("id", `extra-ingredients-${ingredient.id}-${pizzaId}`);
+    checkbox.setAttribute("name", `extra-ingredients-${pizzaId}`);
+
+    const label = document.createElement("label");
+    label.setAttribute("for", `extra-ingredients-${ingredient.id}-${pizzaId}`);
+    label.innerText = `${ingredient.name} - ${ingredient.price} kr.`;
+
+    const ingredientItem = document.createElement("div");
+    ingredientItem.classList.add("ingredient-item");
+    ingredientItem.appendChild(checkbox);
+    ingredientItem.appendChild(label);
+
+    ingredientList.appendChild(ingredientItem);
   }
+
+  // Event listeners for the modal buttons
+  document.getElementById("add-to-cart-modal").onclick = () => {
+    addToCart(pizzaId);
+    modal.style.display = "none";
+  };
+
+  document.getElementById("close-ingredient-modal").onclick = () => {
+    modal.style.display = "none";
+  };
+
+  modal.style.display = "block";
+}

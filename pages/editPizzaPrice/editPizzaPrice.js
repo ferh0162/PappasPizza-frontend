@@ -42,7 +42,8 @@ function renderPizzas(pizzas) {
       "my-3",
       "border",
       `pizza-item`,
-      `item-${pizza.id}`
+      `item-${pizza.id}`,
+      `backgroundWhite`
     );
 
     const pizzaName = document.createElement("h3");
@@ -89,7 +90,7 @@ function submitFormHandler(event) {
 
 async function editPizzaPricing(id, newPrice) {
   try {
-    const options = makeOptions("PATCH", "", false);
+    const options = makeOptions("PATCH", "", true);
     const response = await fetch(
       `${URL}/pizzas/${id}/price/${newPrice}`,
       options

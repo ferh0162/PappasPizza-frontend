@@ -27,7 +27,7 @@
   cursor: pointer;
   padding: 5px;
   margin-bottom: 5px;
-  background-color: #f1f1f1;
+  background-color: #fffdfd;
 }
 
 .selected-ingredient {
@@ -42,4 +42,12 @@
 #selectedIngredientsTitle {
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.backgroundWhite {
+  background-color: white;
+}
+
+.modal-backdrop {
+  z-index: 0;
 }
