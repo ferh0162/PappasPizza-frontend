@@ -9,41 +9,54 @@
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-8">
-                <h2 class="mb-4">Menu</h2>
-                <div class="menu-section">
-                    <h3>Pizzas</h3>
-                    <div class="row pizza-list" id="pizza-list"></div>
-                </div>
-                <div class="menu-section">
-                    <h3>Drinks</h3>
-                    <div class="row drinks-list" id="drinks-list"></div>
-                </div>
+          <div class="col-md-8">
+            <h2 class="mb-4">Menu</h2>
+            <div class="menu-section">
+              <h3>Pizzas</h3>
+              <div class="row pizza-list" id="pizza-list"></div>
             </div>
-            <div class="col-md-4">
-                <div class="card cart">
-                    <div class="card-header">
-                        <h2>Kurv</h2>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled" id="cart-items"></ul>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="deliveryOptions" id="pickup" value="pickup" checked>
-                          <label class="form-check-label" for="pickup">Afhentning</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="deliveryOptions" id="delivery" value="delivery">
-                          <label class="form-check-label" for="delivery">Levering (+50 kr)</label>
-                        </div>
-                        <p>Total: <span id="cart-total">0</span> kr.</p>
-                        <button class="btn btn-custom" id="order-button" href="/order" data-navigo>Bestil</button>
-                        <button class="btn btn-secondary" id="clear-cart-button">Ryd kurv</button>
-                      </div>
-                      
-                </div>
+            <div class="menu-section">
+              <h3>Drinks</h3>
+              <div class="row drinks-list" id="drinks-list"></div>
             </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card cart">
+              <div class="card-header">
+                <h2>Kurv</h2>
+              </div>
+              <div class="card-body">
+                <ul class="list-unstyled" id="cart-items"></ul>
+              </div>
+              <div class="card-footer">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="deliveryOptions" id="pickup" value="pickup" checked>
+                  <label class="form-check-label" for="pickup">Afhentning</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="deliveryOptions" id="delivery" value="delivery">
+                  <label class="form-check-label" for="delivery">Levering (+50 kr)</label>
+                </div>
+                <p>Total: <span id="cart-total">0</span> kr.</p>
+                <button class="btn btn-custom" id="order-button" href="/order" data-navigo>Bestil</button>
+                <button class="btn btn-secondary" id="clear-cart-button">Ryd kurv</button>
+              </div>
+            </div>
+      
+            <div class="card weather">
+              <div class="card-header">
+                <h4>Vejr</h4>
+              </div>
+              <div class="weather-card-body">
+                <div id="weather-info">
+                  <p id="address-id">Adresse: Vigerslev Allé 122, 2500 København</p>
+                  <p id="weatherTemp-id"></p>
+                  <img id="weatherStatus-id" src="" alt="Weather Icon">
+                </div>
+              </div>
+            </div>
+      
+          </div>
         </div>
     </div>
 <div id="ingredient-modal" class="modal">
