@@ -1,11 +1,15 @@
 <template>
-    <h2>Alle ordre</h2>
-    <p>Her kan der komme en masse info "had id been a real project"</p>
-    <p>See <a href="https://getbootstrap.com/docs/5.0/components/navbar/" target="_blank">here</a> for details about the
-      responsive Bootstrap navbar used in this example</p>
-      <ul>
-        <li id="orderReceiptChef-id">
-          <a href="/orderReceiptChef" data-navigo>Til bekræftede ordre</a>
-        </li>
-      </ul>
-<template>
+    <link rel="stylesheet" href="styles/receipt.css" />
+
+    <div class="container">
+        <h1>Alle ordre</h1>
+
+        <!-- Form elements -->
+            <table>
+                <tbody id="receipt-data">
+                    <!-- Receipt data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

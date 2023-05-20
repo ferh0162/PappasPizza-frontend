@@ -1,8 +1,13 @@
-import { REMOTE_API as URL } from "../settings.js";
+
+import { LOCAL_API as URL } from "../../settings.js";
+import {
+  handleHttpErrors,
+} from "../../utils.js";
 
 const pizzas = [];
 const drinks = [];
 let cart = [];
+
 export async function initMenu() {
 
 
@@ -65,7 +70,7 @@ async function fetchPizza() {
 
 async function fetchDrink() {
   try {
-    const response = await fetch( URL + "/drinks");
+    const response = await fetch(URL +"/drinks");
     const data = await response.json();
 
     data.forEach((drink) => {

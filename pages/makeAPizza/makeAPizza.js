@@ -1,7 +1,7 @@
 import { handleHttpErrors, makeOptions} from "../../utils.js";
 import { REMOTE_API as URL } from "../../settings.js";
 
-export function initPizzaManagement() {
+export function initMakeAPizza() {
   document.getElementById("btn-add-pizza-modal").onclick = showPizzaModal;
   document.getElementById("btn-modal-submit-pizza").onclick = addPizza;
 
@@ -45,12 +45,12 @@ async function addPizza(event) {
     ingredients: selectedIngredients,
   };
 
-  const options = makeOptions("POST",newPizza,false)
+  const options = makeOptions("POST",newPizza,true)
 
   try {
     await fetch(URL + "/pizzas", options).then(handleHttpErrors);
     getPizzas();
-    window.router.Navigate("/pizzaBehandling")
+    window.router.navigate("/lavPizza")
 } catch (error) {
     console.log(error)
 }
@@ -108,6 +108,8 @@ function renderIngredients(ingredients) {
       const listItem = document.createElement('li');
       listItem.textContent = ingredient.name;
       listItem.addEventListener('click', () => moveIngredientToSelected(ingredient, listItem));
+     
+      listItem.classList.add('backgroundWhite')
   
       ingredientList.appendChild(listItem);
     });
@@ -156,7 +158,7 @@ function renderPizzas(pizzas) {
 
   pizzas.forEach((pizza) => {
     const listItem = document.createElement('li');
-    listItem.classList.add('container', 'p-3', 'my-3', 'border', 'pizza-item');
+    listItem.classList.add('container', 'p-3', 'my-3', 'border', 'pizza-item', 'backgroundWhite');
 
     const pizzaName = document.createElement('h3');
     pizzaName.textContent = pizza.name;

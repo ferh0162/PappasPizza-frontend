@@ -1,0 +1,36 @@
+<template>
+    <link rel="stylesheet" href="styles/editPizzas.css" />
+    <link rel="stylesheet" href="styles/pizza-management.css" />
+
+
+    <div class="container col-6">
+        <div>
+            <h2>Ret pizza priser - Klik på pizzaerne for at rette</h2>
+            <input type="text" id="searchInput" placeholder="Søg efter navn eller pris">
+            <div id="pizzaContainer" class="pizza-management-pizza-container">
+                <ul id="pizza-list" class="list-group"></ul>
+            </div>
+        </div>
+        <div class="modal" id="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title"></h3>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Pris:</label>
+                            <input type="number" id="price" name="price" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn-modal-submit" class="btn btn-danger" data-bs-dismiss="modal">Ret
+                            pris</button>
+                        <button type="button" id="btn-modal-close" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Luk</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,111 @@
+body {
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.receipt-container {
+  font-family: 'Courier New', monospace;
+
+    max-width: 500px;
+    background-color: #fff;
+    margin: 40px auto;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo-space {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed;
+}
+
+th, td {
+    border-bottom: 1px dashed #ccc;
+    padding: 4px 8px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+th {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Add the following styles to your existing styles.css file */
+/* Add the following styles to your existing styles.css file */
+
+.order-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .order-info {
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 1rem;
+    margin-right: 1rem;
+  }
+  
+  .time-options {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .time-options button {
+    margin-bottom: 0.5rem;
+  }
+  
+  .confirmation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button:last-child {
+    margin-bottom: 0;
+  }

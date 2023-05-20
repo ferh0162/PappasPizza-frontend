@@ -1,6 +1,32 @@
-<template>
-    <h2>Ubekræftede ordre</h2>
-    <p>Her kan der komme en masse info "had id been a real project"</p>
-    <p>See <a href="https://getbootstrap.com/docs/5.0/components/navbar/" target="_blank">here</a> for details about the
-      responsive Bootstrap navbar used in this example</p>
-<template>
+  <template>
+    <link rel="stylesheet" href="styles/orderConfirmation.css">
+
+  <div class="container">
+    <h1>Order Confirmation</h1>
+
+    <div class="order-wrapper">
+      <div class="order-info" id="order-info">
+        <!-- Order information will be populated by JavaScript -->
+      </div>
+
+      <div class="time-options">
+        <h2>Choose Pickup Time</h2>
+        <button class="pickup-time" data-minutes="10">10 Minutes</button>
+        <button class="pickup-time" data-minutes="15">15 Minutes</button>
+        <button class="pickup-time" data-minutes="20">20 Minutes</button>
+        <button class="pickup-time" data-minutes="30">30 Minutes</button>
+        <button class="pickup-time" data-minutes="45">45 Minutes</button>
+        <button class="pickup-time" data-minutes="60">60 Minutes</button>
+        <button class="pickup-time" data-minutes="90">90 Minutes</button>
+        <!-- ... rest of your buttons ... -->
+      </div>
+      
+      
+
+      <div class="confirmation-buttons">
+        <button id="confirm-order-button" class="confirm-button">Confirm Order</button>
+        <button id="refuse-order-button" class="refuse-button">Refuse Order</button>
+      </div>
+      
+  </div>
+</template>

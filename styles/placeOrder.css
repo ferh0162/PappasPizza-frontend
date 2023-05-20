@@ -1,0 +1,113 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;  /* Adjust the width to 1000px */
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #e67e22;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    color: #333;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.card-header, .card-footer {
+    background-color: #f8f9fa;
+}
+
+button {
+    display: block;
+    width: 100%;  /* Make the button take up the full width */
+    padding: 0.75rem 1rem;  /* Increase the padding to make it look more modern */
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 5px;  /* Increase the border radius to make it look more modern */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;  /* Optional: Adjust the font size to your liking */
+}
+
+button:hover {
+    background-color: #d35400;
+}
+
+#cart-items {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.cart-item .item-id,
+.cart-item .item-name,
+.cart-item .item-ingredients,
+.cart-item .item-added,
+.cart-item .item-price,
+.cart-item .item-quantity {
+    margin: 0 10px;
+}
+
+.item-name {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.item-added {
+    color: gray;
+    font-size: 0.9rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.col-width {
+    width: 37.33%;
+}

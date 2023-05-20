@@ -1,7 +1,9 @@
 import { REMOTE_API as URL } from "../../settings.js";
+import { handleHttpErrors, makeOptions } from "../../utils.js";
 
 
-export function initIngredients(){
+
+export function initIngredients() {
     const ingredientComponent = document.querySelector('ingredient-component');
     if (ingredientComponent) {
         ingredientComponent.loadIngredients();
@@ -25,7 +27,7 @@ class IngredientComponent extends HTMLElement {
 
 
         // Create a shadow root
-        const shadow = this.attachShadow({mode: 'open'});
+        const shadow = this.attachShadow({ mode: 'open' });
 
         // Create a template element and add your HTML to it
         const template = document.createElement('template');
@@ -70,64 +72,39 @@ customElements.define('ingredient-component', IngredientComponent);
 
 
 
-async function loadIngredients(){
+async function loadIngredients() {
     await this.renderIngredients();
     await this.renderAddIngredients();
 }
 
 
-async function handleHttpErrors(response) {
-    if (!response.ok) {
-        let errorMessage = `${response.status} (${response.statusText})`;
-
-        let errorData = null;
-        if (response.headers.get('content-type').includes('application/json')) {
-            const responseData = await response.json();
-            errorMessage = `${errorMessage}: ${responseData.message}`;
-            errorData = responseData.errors;
-        }
-
-        const error = new Error(errorMessage);
-        error.data = errorData;
-        throw error;
-    }
-    console.log(response.headers)
-    if (response.headers.get('content-type').includes('application/json')) {
-        return await response.json();
-    }
-
-    return response;
-}
-
 async function deleteIngredient(id) {
-    try{
-    const response = await fetch(URL + `/ingredients/${id}`, {
-        method: 'DELETE'
-    });
-    if (response.status != 204) {
-        const result = await handleHttpErrors(response);
-        if (result) {
+    const options = makeOptions("DELETE", '', true)
+
+    try {
+        const response = await fetch(URL + `/ingredients/${id}`,
+            options
+        );
+        if (response.status != 204) {
+            const result = await handleHttpErrors(response);
+            if (result) {
+                await loadIngredients.call(this);
+            }
+            return result;
+        } else {
             await loadIngredients.call(this);
         }
-        return result;
-    } else {
-        await loadIngredients.call(this);
-    }
-}catch (error) {
+    } catch (error) {
         console.log("There was a problem with the fetch operation: " + error.message);
 
     }
 }
 
 async function addIngredient(ingredientRequest) {
+    const options = makeOptions("POST", ingredientRequest, true)
+
     try {
-        const response = await fetch(URL + `/ingredients`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ingredientRequest)
-        });
+        const response = await fetch(URL + `/ingredients`, options);
         const result = await handleHttpErrors(response);
         if (result) { // assuming handleHttpErrors returns a truthy value on success
             await loadIngredients.call(this);
@@ -140,14 +117,10 @@ async function addIngredient(ingredientRequest) {
 }
 
 async function editIngredient(id, ingredientRequest) {
+    const options = makeOptions("PUT", ingredientRequest, true)
+
     try {
-        const response = await fetch(URL + `/ingredients/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ingredientRequest)
-        });
+        const response = await fetch(URL + `/ingredients/${id}`, options);
         const result = await handleHttpErrors(response);
         if (result) {
             await loadIngredients.call(this);
@@ -160,18 +133,16 @@ async function editIngredient(id, ingredientRequest) {
 }
 
 async function populateEditForm(id) {
-    try {
-    await fetch(URL + `/ingredients/${id}`)
-        .then(response => response.json())
-        .then(ingredient => {
-            this.shadowRoot.getElementById('editIngredientId').value = ingredient.id;
-            this.shadowRoot.getElementById('editIngredientName').value = ingredient.name;
-            this.shadowRoot.getElementById('editIngredientPrice').value = ingredient.price;
-        })
-        .catch(error => console.log("There was a problem with the fetch operation: " + error.message));
-}catch (error) {
-        console.log("There was a problem with the fetch operation: " + error.message);
+    const options = makeOptions("GET", '', true)
 
+    try {
+        const ingredient = await fetch(URL + `/ingredients/${id}`)
+            .then(handleHttpErrors)
+        this.shadowRoot.getElementById('editIngredientId').value = ingredient.id;
+        this.shadowRoot.getElementById('editIngredientName').value = ingredient.name;
+        this.shadowRoot.getElementById('editIngredientPrice').value = ingredient.price;
+    } catch (error) {
+        console.log("There was a problem with the fetch operation: " + error.message);
     }
 }
 
@@ -245,14 +216,14 @@ async function renderIngredients() {
 }
 
 
-async function renderAddIngredients(){
+async function renderAddIngredients() {
 
     try {
         const tableDataContainer = this.shadowRoot.querySelector("#table-data");
         tableDataContainer.innerHTML = '';
         let headerRow = document.createElement('tr');
         headerRow.className = 'tr';
-        ['Ingrediens','Pris','Tilføj'].forEach(headerText => {
+        ['Ingrediens', 'Pris', 'Tilføj'].forEach(headerText => {
             let header = document.createElement('th');
             header.className = 'th';
             header.textContent = headerText;
@@ -281,7 +252,7 @@ async function renderAddIngredients(){
         addButton.textContent = 'Tilføj';
         addButton.className = 'add-button';
         addButton.addEventListener('click', () =>
-            this.addIngredient({name: ingredientInput.value, price: priceInput.value}));
+            this.addIngredient({ name: ingredientInput.value, price: priceInput.value }));
         let addCell = document.createElement('td');
         addCell.appendChild(addButton);
         row.appendChild(addCell);
@@ -338,9 +309,9 @@ function createEditForm() {
 
     editButton.textContent = 'Rediger';
     editButton.className = 'edit-button';
-    editButton.addEventListener('click', async () =>{
+    editButton.addEventListener('click', async () => {
         if (idInput.value) {
-            await this.editIngredient(idInput.value, {name: ingredientInput.value, price: priceInput.value});
+            await this.editIngredient(idInput.value, { name: ingredientInput.value, price: priceInput.value });
             await this.loadIngredients();
         }
     });
