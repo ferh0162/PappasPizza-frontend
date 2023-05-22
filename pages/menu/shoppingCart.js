@@ -122,7 +122,7 @@ async function fetchIngredients() {
   // Only fetch ingredients if the array is empty
   if (ingredients.length === 0) {
     try {
-      const response = await fetch("http://localhost:8080/api/ingredients");
+      const response = await fetch(URL +"/ingredients");
       const data = await response.json();
 
       // Process the fetched data and add ingredients to the array
