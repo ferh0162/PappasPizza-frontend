@@ -43,28 +43,6 @@ export async function initMenu() {
   for (const option of document.getElementsByName("deliveryOptions")) {
     option.addEventListener("change", updateCart);
   }
-  initWeatherStatus()
-}
-
-async function initWeatherStatus() {
-  try {
-    const weatherData = await fetch(URL + "/weather").then(handleHttpErrors);
-
-    const icon = weatherData.icon;
-
-    document.getElementById("address-id").innerHTML =
-      `Adresse: Vigerslev Allé 122, 2500 København <br>
-      Tlf: 50 16 26 50`;
-
-    document.getElementById("weatherTemp-id").innerHTML =
-      ((weatherData.temperature - 273.15).toFixed(1)) + " °C";
-
-    document.getElementById("weatherStatus-id").src =
-      `https://openweathermap.org/img/wn/${icon}@2x.png`;
-
-  } catch (error) {
-    console.error("Error fetching weather data:", error);
-  }
 }
 
 // Fetch pizzas from the server
